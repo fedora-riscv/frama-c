@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -123,7 +123,7 @@ strip %{buildroot}/%{_bindir}/frama-c-gui
 strip %{buildroot}/%{_libdir}/frama-c/plugins/Ltl_to_acsl.cmxs
 
 desktop-file-install                                    \
---dir=${RPM_BUILD_ROOT}%{_datadir}/applications         \
+--dir=${RPM_BUILD_ROOT}%{_datadir}/applications/         \
 %{SOURCE2}
 
 %clean
@@ -148,7 +148,7 @@ rm -rf %{buildroot}
 %{_datadir}/frama-c/frama-c.rc
 %{_datadir}/frama-c/why
 %{_datadir}/frama-c/manuals
-%{_datadir}/applications
+%{_datadir}/applications/*.gui
 %{_mandir}/man1/*
 %exclude %{_datadir}/frama-c
 
@@ -166,6 +166,9 @@ semanage fcontext -a -t textrel_shlib_t '%{_libdir}/frama-c/plugins/Ltl_to_acsl.
 restorecon -v '%{_libdir}/frama-c/plugins/Ltl_to_acsl.cmxs'
 
 %changelog
+* Sat Jul 31 2010 Mark Rader <msrader@gmail.com> 1.4-6
+- Modified the gui file and directory to correct potential ownership problem.
+
 * Sun Jul 18 2010 Mark Rader <msrader@gmail.com> 1.4-5
 - Modified comments to patch 1 in spec file
 - Corrected SELinux context settings
