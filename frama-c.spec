@@ -148,7 +148,7 @@ rm -rf %{buildroot}
 %{_datadir}/frama-c/frama-c.rc
 %{_datadir}/frama-c/why
 %{_datadir}/frama-c/manuals
-%{_datadir}/applications/*.gui
+%{_datadir}/applications/*.desktop
 %{_mandir}/man1/*
 %exclude %{_datadir}/frama-c
 
