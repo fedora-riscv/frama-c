@@ -36,7 +36,7 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 
 BuildRequires: ocaml >= 3.11.0, ocaml-findlib-devel, ocaml-lablgtk-devel >= 2.14.0-5 , ocaml-ocamlgraph-devel
-BuildRequires: gtksourceview >= 1.0.0, gtksourceview-devel
+BuildRequires: gtksourceview >= 1.0.0, gtksourceview-devel, gtksourceview2, gtksourceview2-devel
 BuildRequires: libgnomecanvas-devel
 BuildRequires: desktop-file-utils
 BuildRequires: ltl2ba >= 1.1
