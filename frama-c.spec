@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.4
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -166,6 +166,9 @@ semanage fcontext -a -t textrel_shlib_t '%{_libdir}/frama-c/plugins/Ltl_to_acsl.
 restorecon -v '%{_libdir}/frama-c/plugins/Ltl_to_acsl.cmxs'
 
 %changelog
+* Fri Jan 07 2011 Richard W.M. Jones <rjones@redhat.com> - 1.4-6
+- Rebuild for OCaml 3.12 (http://fedoraproject.org/wiki/Features/OCaml3.12).
+
 * Sun Jul 18 2010 Mark Rader <msrader@gmail.com> 1.4-5
 - Modified comments to patch 1 in spec file
 - Corrected SELinux context settings
