@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Frama-C
-GenericName=Frama C
-Exec=frama-c-gui
-Icon=gnome-gmush
-Terminal=false
-Type=Application
-Categories=Development;
-
