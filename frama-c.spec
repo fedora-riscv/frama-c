@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.5
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -53,8 +53,8 @@ Requires: graphviz >= 2.0.0
 Requires: gtksourceview >= 1.0.0
 Requires: ocaml >= 3.11.0
 
-
-ExcludeArch: PPC, PPC64, ARM, IA64, MIPS, S390
+# ocaml only available on these:
+ExclusiveArch: alpha armv4l %{ix86} ia64 x86_64 ppc sparc sparcv9 ppc64
 
 
 %description
@@ -148,6 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Jan 22 2011 Dan Horák <dan[at]danny.cz> - 1.5-2
+- updated the supported arch list
+
 * Sat Jul 07 2010 Mark Rader <msrader@gmail.com> 1.5-1
 - Upgraded Frama C to Boron version and added ltl2ba dependencies.
 
