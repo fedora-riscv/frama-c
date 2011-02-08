@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.5
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -148,6 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
+
 * Sat Jan 22 2011 Dan Horák <dan[at]danny.cz> - 1.5-2
 - updated the supported arch list
 
