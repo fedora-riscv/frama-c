@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.5
-Release:        3%{?dist}
+Release:        3.1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -54,7 +54,7 @@ Requires: gtksourceview >= 1.0.0
 Requires: ocaml >= 3.11.0
 
 # ocaml only available on these:
-ExclusiveArch: alpha armv4l %{ix86} ia64 x86_64 ppc sparc sparcv9 ppc64
+ExclusiveArch: alpha armv4l %{ix86} ia64 x86_64 ppc ppc64 sparc sparcv9 ppc64
 
 
 %description
@@ -148,6 +148,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Apr 13 2011 Karsten Hopp <karsten@redhat.com> 1.5-3.1
+- add ppc64 to archs with ocaml
+
 * Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.5-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
 
