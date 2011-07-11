@@ -17,6 +17,7 @@ GPL (no version):
 tests/bugs/evoting.c
 
 QPL with modifications (see licenses/Q_MODIFIED_LICENSE):
+external/hptmap.ml*
 external/ptmap.ml*
 -------------------------------------------------------------------------
 Determination made as follows:

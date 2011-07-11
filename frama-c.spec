@@ -7,7 +7,6 @@
 # are not availible with the ocaml-cil because the upstream has
 # forked their own version of cil.
 
-
 %global debug_package %{nil}
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 %if %opt
@@ -16,46 +15,42 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Boron-20100401
+%global pkgversion Carbon-20110201
 
 Name:           frama-c
-Version:        1.5
-Release:        3.1%{?dist}
+Version:        1.6
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
-# Licensing breakdown in source file frama-c-1.4-licensing
-License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with modifications)
-URL:            http://frama-c.cea.fr/
-Source0:        http://frama-c.cea.fr/download/%{name}-%{pkgversion}.tar.gz
-Source1:        frama-c-1.5.licensing
+# Licensing breakdown in source file frama-c-1.6-licensing
+License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
+URL:            http://frama-c.com/
+Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
+Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
+Source3:        acsl.el
 
+BuildRequires:  desktop-file-utils
+BuildRequires:  emacs-nox xemacs-nox
+BuildRequires:  graphviz
+BuildRequires:  gtksourceview2-devel
+BuildRequires:  libgnomecanvas-devel
+BuildRequires:  ltl2ba
+BuildRequires:  ocaml
+BuildRequires:  ocaml-findlib-devel
+BuildRequires:  ocaml-lablgtk-devel
+BuildRequires:  ocaml-ocamlgraph-devel
 
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-
-
-BuildRequires: ocaml >= 3.11.0, ocaml-findlib-devel, ocaml-lablgtk-devel >= 2.14.0-5 , ocaml-ocamlgraph-devel
-BuildRequires: gtksourceview >= 1.0.0, gtksourceview-devel, gtksourceview2, gtksourceview2-devel
-BuildRequires: libgnomecanvas-devel
-BuildRequires: desktop-file-utils
-BuildRequires: ltl2ba >= 1.1
-
-# specialized dependency generator used because of issues with OCAML at the 
-# suggestion of the OCAML group
-
-%define _use_internal_dependency_generator 0
-%define __find_requires /usr/lib/rpm/ocaml-find-requires.sh  -i GtkSourceView2_types -i Ltlast -i Promelaast -i Cil_types -i Db_types -i Dgraph -i Lattice_With_Isotropy -i Logic_ptree -i Signature
-%define __find_provides /usr/lib/rpm/ocaml-find-provides.sh -i GtkSourceView2_types -i Ltlast -i Promelaast -i Cil_types -i Db_types -i Dgraph -i Lattice_With_Isotropy -i Logic_ptree -i Signature
-
-
-Requires: graphviz >= 2.0.0
-Requires: gtksourceview >= 1.0.0
-Requires: ocaml >= 3.11.0
+Requires:       cpp
+Requires:       graphviz
+Requires:       ltl2ba
 
 # ocaml only available on these:
-ExclusiveArch: alpha armv4l %{ix86} ia64 x86_64 ppc ppc64 sparc sparcv9 ppc64
+ExclusiveArch:  %{ocaml_arches}
 
+# Filter out bogus requires
+%global __requires_exclude ocaml\\\(((GtkSourceView2_types)|(Ltlast)|(Promelaast)|(Sig))\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -70,55 +65,115 @@ sophisticated tools, such as a slicer and dependency analysis.
 %package devel
 Summary:        Development files for %{name}
 Group:          Development/Libraries
-Requires:       %{name} = %{version}-%{release}
+Requires:       %{name}%{?_isa} = %{version}-%{release}
 
 %description devel
 The %{name}-devel package contains libraries and signature files for
 developing applications that use %{name}. In particular, this package
 is necessary to compile plug ins for Frama-C.
 
+%package doc
+Summary:        Large documentation files for %{name}
+Group:          Documentation 
+Requires:       %{name} = %{version}-%{release}
+BuildArch:      noarch
+
+%description doc
+Large documentation files for %{name}.
+
+%package emacs
+Summary:        Emacs support file for ACSL markup
+Group:          Development/Languages
+License:        LGPLv2
+Requires:       %{name} = %{version}-%{release}
+Requires:       emacs(bin)
+BuildArch:      noarch
+
+%description emacs
+This package contains an Emacs support file for working with C source
+files marked up with ACSL.
+
+%package emacs-el
+Summary:        Emacs source file for ACSL markup
+Group:          Development/Languages
+License:        LGPLv2
+Requires:       %{name}-emacs = %{version}-%{release}
+BuildArch:      noarch
+
+%description emacs-el
+This package contains the Emacs source file for working with C source
+files marked up with ACSL.  This package is not needed to use the Emacs
+support.
+
+%package xemacs
+Summary:        XEmacs support file for ACSL markup
+Group:          Development/Languages
+License:        LGPLv2
+Requires:       %{name} = %{version}-%{release}
+Requires:       xemacs(bin), xemacs-packages-extra
+BuildArch:      noarch
+
+%description xemacs
+This package contains an XEmacs support file for working with C source
+files marked up with ACSL.
+
+%package xemacs-el
+Summary:        XEmacs source file for ACSL markup
+Group:          Development/Languages
+License:        LGPLv2
+Requires:       %{name}-xemacs = %{version}-%{release}
+BuildArch:      noarch
+
+%description xemacs-el
+This package contains the XEmacs source file for working with C source
+files marked up with ACSL.  This package is not needed to use the XEmacs
+support.
+
 %prep
 %setup -q -n %{name}-%pkgversion
 
-
-iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv && mv man/frama-c.1.conv man/frama-c.1
+# Fix encodings
+iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
+touch -r man/frama-c.1 man/frama-c.1.conv
+mv -f man/frama-c.1.conv man/frama-c.1
 
 %build
-
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
 %global framac_make_options VERBOSEMAKE=yes OCAMLBEST=%{ocamlbest}
 
-# Must disable plug-ins that no longer work, else running will cause warnings.
-%configure --disable-security_slicing --disable-aorai
+%configure
 make %{framac_make_options}
 
-
 %install
-rm -rf %{buildroot}
-
 make install DESTDIR=%{buildroot} %{framac_make_options}
-strip %{buildroot}/%{_bindir}/frama-c
-strip %{buildroot}/%{_bindir}/frama-c-gui
-chmod -x  %{buildroot}/usr/share/frama-c/libc/*.h
-chmod -x  %{buildroot}/usr/share/frama-c/libc/*.c
-chmod -x  %{buildroot}/usr/share/frama-c/libc/sys/*.h
-chmod -x  %{buildroot}/usr/share/frama-c/libc/netinet/*.h
+strip %{buildroot}%{_bindir}/frama-c
+strip %{buildroot}%{_bindir}/frama-c-gui
+strip %{buildroot}%{_libdir}/frama-c/plugins/*.cmxs
+strip %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cmxs
 desktop-file-install                                    \
 --dir=${RPM_BUILD_ROOT}%{_datadir}/applications/         \
 %{SOURCE2}
 
-%clean
-rm -rf %{buildroot}
+# Install and bytecompile the XEmacs file
+mkdir -p %{buildroot}%{_xemacs_sitelispdir}
+cp -p share/acsl.el %{buildroot}%{_xemacs_sitelispdir}
+cd %{buildroot}%{_xemacs_sitelispdir}
+%{_xemacs_bytecompile} acsl.el
+mkdir -p %{buildroot}%{_xemacs_sitestartdir}
+cp -p %{SOURCE3} %{buildroot}%{_xemacs_sitestartdir}
+
+# Install and bytecompile the Emacs file
+mkdir -p %{buildroot}%{_emacs_sitelispdir}
+mv %{buildroot}%{_datadir}/frama-c/acsl.el %{buildroot}%{_emacs_sitelispdir}
+cd %{buildroot}%{_emacs_sitelispdir}
+%{_emacs_bytecompile} acsl.el
+mkdir -p %{buildroot}%{_emacs_sitestartdir}
+cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
 
 %files
-%defattr(-,root,root,-)
+%doc licenses/* cil/LICENSE doc/manuals/user-manual.pdf
 %{_bindir}/*
-%doc licenses/LGPLv2.1
-%doc licenses/LGPLv3
-%doc licenses/Q_MODIFIED_LICENSE
-%doc cil/LICENSE
-
 %exclude %{_bindir}/frama-c.byte
 %exclude %{_bindir}/frama-c-gui.byte
 %exclude %{_bindir}/ptests.byte
@@ -127,27 +182,52 @@ rm -rf %{buildroot}
 %exclude %{_libdir}/frama-c/*.o
 %{_libdir}/frama-c
 %dir %{_datadir}/frama-c/
-%{_datadir}/frama-c/*
+%{_datadir}/frama-c/*.gif
+%{_datadir}/frama-c/*.ico
+%{_datadir}/frama-c/*.png
 %{_datadir}/applications/*.desktop
 %{_mandir}/man1/*
-%exclude %{_datadir}/frama-c
 
 %files devel
-%defattr(-,root,root,-)
+%doc doc/manuals/plugin-development-guide.pdf
 %{_datadir}/frama-c/*
 %{_libdir}/frama-c/*.cmo
 %{_libdir}/frama-c/*.cmx
 %{_libdir}/frama-c/*.o
-%{_mandir}/man1/*
-%exclude %{_datadir}/frama-c/why
+%exclude %{_datadir}/frama-c/*.gif
+%exclude %{_datadir}/frama-c/*.ico
+%exclude %{_datadir}/frama-c/*.png
 %exclude %{_datadir}/frama-c/manuals
-%exclude %{_mandir}/man1/frama-c.1.gz
-%exclude %{_mandir}/man1/frama-c-gui.1.gz
 
-%post 
+%files doc
+%doc doc/manuals/acsl* doc/manuals/aorai-manual.pdf
+%doc doc/manuals/jessie-tutorial.pdf doc/manuals/rte-manual.pdf
+%doc doc/manuals/value-analysis.pdf doc/manuals/wp-manual.pdf
 
+%files emacs
+%{_emacs_sitelispdir}/acsl.elc
+%{_emacs_sitestartdir}/acsl.el
+
+%files emacs-el
+%{_emacs_sitelispdir}/acsl.el
+
+%files xemacs
+%{_xemacs_sitelispdir}/acsl.elc
+%{_xemacs_sitestartdir}/acsl.el
+
+%files xemacs-el
+%{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Jul 11 2011 Jerry James <loganjerry@gmail.com> - 1.6-1
+- Update to Carbon version
+- Removed unnecessary spec file elements (BuildRoot, etc.)
+- Update approach to filtering provides and requires
+- Do not filter as much; why should Require some of the filtered names
+- Add (X)Emacs support packages
+- Add doc subpackage to hold large manual PDFs
+- Support for gtksourceview 1.x has been dropped
+
 * Wed Apr 13 2011 Karsten Hopp <karsten@redhat.com> 1.5-3.1
 - add ppc64 to archs with ocaml
 
@@ -171,6 +251,4 @@ rm -rf %{buildroot}
 - Add SELinux context settings.
 
 * Wed Feb 10 2010 Alan Dunn <amdunn@gmail.com> 1.4-1
-
 - Initial Fedora RPM
-
