@@ -15,10 +15,10 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Carbon-20110201
+%global pkgversion Nitrogen-20111001
 
 Name:           frama-c
-Version:        1.6
+Version:        1.7
 Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
@@ -31,6 +31,8 @@ Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
 
+BuildRequires:  alt-ergo
+BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  emacs-nox xemacs-nox
 BuildRequires:  graphviz
@@ -50,7 +52,7 @@ Requires:       ltl2ba
 ExclusiveArch:  %{ocaml_arches}
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\(((GtkSourceView2_types)|(Ltlast)|(Promelaast)|(Sig))\\\)
+%global __requires_exclude ocaml\\\(((Formula)|(GtkSourceView2_types)|(Ltlast)|(Mcfg)|(Mfloat)|(Mint)|(Mlogic)|(Mvalues)|(Mwp)|(Promelaast)|(Sig))\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -137,10 +139,18 @@ iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
+# Version 1.8 of ocamlgraph is good, therefore version 1.8.1 is also
+sed -i 's|1\.8)|1.8.1)|' configure
+
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
 %global framac_make_options VERBOSEMAKE=yes OCAMLBEST=%{ocamlbest}
+
+# Fake the existence of why so the plugin is built
+touch why why-dp
+chmod a+x why why-dp
+PATH=${PATH}:`pwd`
 
 %configure
 make %{framac_make_options}
@@ -166,13 +176,19 @@ cp -p %{SOURCE3} %{buildroot}%{_xemacs_sitestartdir}
 # Install and bytecompile the Emacs file
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
 mv %{buildroot}%{_datadir}/frama-c/acsl.el %{buildroot}%{_emacs_sitelispdir}
+chmod a-x %{buildroot}%{_emacs_sitelispdir}/acsl.el
 cd %{buildroot}%{_emacs_sitelispdir}
 %{_emacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
 
+# The install step adds lots of spurious executable bits
+find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 | \
+xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
+                %{buildroot}%{_mandir}/man1/*
+
 %files
-%doc licenses/* cil/LICENSE doc/manuals/user-manual.pdf
+%doc licenses/* doc/manuals/user-manual.pdf VERSION
 %{_bindir}/*
 %exclude %{_bindir}/frama-c.byte
 %exclude %{_bindir}/frama-c-gui.byte
@@ -201,8 +217,9 @@ cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
 
 %files doc
 %doc doc/manuals/acsl* doc/manuals/aorai-manual.pdf
-%doc doc/manuals/jessie-tutorial.pdf doc/manuals/rte-manual.pdf
-%doc doc/manuals/value-analysis.pdf doc/manuals/wp-manual.pdf
+%doc doc/manuals/jessie-tutorial.pdf doc/manuals/metrics-manual.pdf
+%doc doc/manuals/rte-manual.pdf doc/manuals/value-analysis.pdf
+%doc doc/manuals/wp-manual.pdf
 
 %files emacs
 %{_emacs_sitelispdir}/acsl.elc
@@ -219,6 +236,9 @@ cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue Oct 25 2011 Jerry James <loganjerry@gmail.com> - 1.7-1
+- Update to Nitrogen version
+
 * Mon Jul 11 2011 Jerry James <loganjerry@gmail.com> - 1.6-1
 - Update to Carbon version
 - Removed unnecessary spec file elements (BuildRoot, etc.)
