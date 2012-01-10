@@ -19,7 +19,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -236,6 +236,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Jan  9 2012 Jerry James <loganjerry@gmail.com> - 1.7-3
+- Rebuild for OCaml 3.12.1
+
 * Tue Nov  8 2011 Jerry James <loganjerry@gmail.com> - 1.7-2
 - Rebuild to eliminate libpng dependency
 
