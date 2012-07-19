@@ -19,7 +19,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -236,6 +236,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-4
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Mon Jan  9 2012 Jerry James <loganjerry@gmail.com> - 1.7-3
 - Rebuild for OCaml 3.12.1
 
