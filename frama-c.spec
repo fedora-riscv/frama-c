@@ -31,6 +31,10 @@ Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
 
+# Fix configure script to detect OCaml 4.00.0.
+Patch1:         configure-ocaml-4.patch
+BuildRequires:  autoconf
+
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
@@ -133,6 +137,9 @@ support.
 
 %prep
 %setup -q -n %{name}-%pkgversion
+
+%patch1 -p1
+autoconf
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
