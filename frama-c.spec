@@ -30,10 +30,11 @@ Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
-
-# Fix configure script to detect OCaml 4.00.0.
-Patch1:         configure-ocaml-4.patch
-BuildRequires:  autoconf
+# Adapt to changes in Hashtbl signature in OCaml 4.00.0.  An equivalent patch
+# has been submitted upstream.
+Patch0:         frama-c-ocaml4.patch
+# Adapt to changes in ocaml-ocamlgraph.  Submitted upstream.
+Patch1:         frama-c-ocamlgraph.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -137,17 +138,17 @@ support.
 
 %prep
 %setup -q -n %{name}-%pkgversion
-
-%patch1 -p1
-autoconf
+%patch0
+%patch1
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
-# Version 1.8 of ocamlgraph is good, therefore version 1.8.1 is also
-sed -i 's|1\.8)|1.8.1)|' configure
+# Version 1.8 of ocamlgraph is good, therefore 1.8.X is good, too.
+# Also adapt to OCaml 4.00.0.
+sed -e 's|1\.8)|1.8*)|' -e 's/3\.1\*/3.1*|4*/' -i configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -245,6 +246,8 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %changelog
 * Mon Jul 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1.7-5
 - Rebuild for OCaml 4.00.0 official.
+- Adapt to new Hashtbl signature in OCaml 4.00.0 (jjames)
+- Adapt to ocamlgraph 1.8.2 (jjames)
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild

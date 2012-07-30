@@ -1,0 +1,54 @@
+--- ./src/semantic_callgraph/register.ml.orig	2011-10-10 02:38:07.000000000 -0600
++++ ./src/semantic_callgraph/register.ml	2012-07-30 16:40:16.778579433 -0600
+@@ -108,6 +108,19 @@ module Service =
+                 else `Dotted) ]
+          let equal = Kernel_function.equal
+          let hash = Kernel_function.hash
++         let compare kf1 kf2 =
++           if kf1 == kf2 then 0
++           else
++             let res =
++               String.compare
++                 (Kernel_function.get_name kf1)
++                 (Kernel_function.get_name kf2)
++             in
++             if res <> 0 then res
++             else
++               String.compare
++                 (Kernel_function.get_vi kf1).vname
++                 (Kernel_function.get_vi kf2).vname
+          let entry_point () =
+            try Some (fst (Globals.entry_point ()))
+            with Globals.No_such_entry_point _ -> None
+--- ./src/syntactic_callgraph/register.ml.orig	2011-10-10 02:38:30.000000000 -0600
++++ ./src/syntactic_callgraph/register.ml	2012-07-30 16:36:11.961572956 -0600
+@@ -40,6 +40,7 @@ module Service =
+            [ match v.cnInfo with
+              | NIVar (_,b) when not !b -> `Style `Dotted
+              | _ -> `Style `Bold ]
++         let compare v1 v2 = Datatype.Int.compare (id v1) (id v2)
+          let equal v1 v2 = id v1 = id v2
+          let hash = id
+          let entry_point () = !entry_point_ref
+--- ./src/misc/service_graph.mli.orig	2011-10-10 02:38:28.000000000 -0600
++++ ./src/misc/service_graph.mli	2012-07-30 16:36:11.965572960 -0600
+@@ -28,7 +28,7 @@ module Make
+   (G: sig
+      type t
+      module V: sig
+-       include Graph.Sig.HASHABLE
++       include Graph.Sig.COMPARABLE
+        val id: t -> int
+          (** assume is >= 0 and unique for each vertices of the graph *)
+        val name: t -> string
+--- ./src/misc/service_graph.ml.orig	2011-10-10 02:38:28.000000000 -0600
++++ ./src/misc/service_graph.ml	2012-07-30 16:36:11.968572963 -0600
+@@ -24,7 +24,7 @@ module Make
+   (G: sig
+      type t
+      module V: sig
+-       include Graph.Sig.HASHABLE
++       include Graph.Sig.COMPARABLE
+        val id: t -> int
+        val name: t -> string
+        val attributes: t -> Graph.Graphviz.DotAttributes.vertex list
