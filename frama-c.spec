@@ -8,6 +8,7 @@
 # forked their own version of cil.
 
 %global debug_package %{nil}
+%global __strip /usr/bin/true
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 %if %opt
 %global ocamlbest opt
@@ -19,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -254,6 +255,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Fri Aug  3 2012 Jerry James <loganjerry@gmail.com> - 1.7-7
+- Shipping the bytecode version works better if it isn't stripped.
+
 * Fri Aug  3 2012 Jerry James <loganjerry@gmail.com> - 1.7-6
 - Use upstream's version of the ocamlgraph patch.
 - Ship the bytecode binaries until the native breakage is diagnosed.
