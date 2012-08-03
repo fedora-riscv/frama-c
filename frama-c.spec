@@ -19,7 +19,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -158,17 +158,27 @@ sed -e 's|1\.8)|1.8*)|' -e 's/3\.1\*/3.1*|4*/' -i configure
 # Fake the existence of why so the plugin is built
 touch why why-dp
 chmod a+x why why-dp
-PATH=${PATH}:`pwd`
+PATH=${PATH}:${PWD}
 
 %configure
 make %{framac_make_options}
 
 %install
 make install DESTDIR=%{buildroot} %{framac_make_options}
-strip %{buildroot}%{_bindir}/frama-c
-strip %{buildroot}%{_bindir}/frama-c-gui
-strip %{buildroot}%{_libdir}/frama-c/plugins/*.cmxs
-strip %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cmxs
+
+# The native version is currently broken with OCaml 4.00.0.
+# Package the bytecode version until the source of the breakage is found.
+mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
+mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
+#%%if %%opt
+#strip %%{buildroot}%%{_bindir}/frama-c
+#strip %%{buildroot}%%{_bindir}/frama-c-gui
+#strip %%{buildroot}%%{_libdir}/frama-c/plugins/*.cmxs
+#strip %%{buildroot}%%{_libdir}/frama-c/plugins/gui/*.cmxs
+#%else
+#mv -f %%{buildroot}%{_bindir}/frama-c.byte %%{buildroot}%%{_bindir}/frama-c
+#mv -f %%{buildroot}%{_bindir}/frama-c-gui.byte %%{buildroot}%%{_bindir}/frama-c-gui
+#%%endif
 desktop-file-install                                    \
 --dir=${RPM_BUILD_ROOT}%{_datadir}/applications/         \
 %{SOURCE2}
@@ -244,10 +254,12 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Fri Aug  3 2012 Jerry James <loganjerry@gmail.com> - 1.7-6
+- Use upstream's version of the ocamlgraph patch.
+- Ship the bytecode binaries until the native breakage is diagnosed.
+
 * Mon Jul 30 2012 Richard W.M. Jones <rjones@redhat.com> - 1.7-5
 - Rebuild for OCaml 4.00.0 official.
-- Adapt to new Hashtbl signature in OCaml 4.00.0 (jjames)
-- Adapt to ocamlgraph 1.8.2 (jjames)
 
 * Thu Jul 19 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.7-4
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
