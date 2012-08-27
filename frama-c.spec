@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -148,8 +148,12 @@ touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
 # Version 1.8 of ocamlgraph is good, therefore 1.8.X is good, too.
-# Also adapt to OCaml 4.00.0.
-sed -e 's|1\.8)|1.8*)|' -e 's/3\.1\*/3.1*|4*/' -i configure
+# Also adapt to OCaml 4.00.0 and alt-ergo 0.94
+sed -e 's|1\.8)|1.8*)|' \
+    -e 's/3\.1\*/3.1*|4*/' \
+    -e 's/0\.92\.2/0.94/' \
+    -i configure
+sed -i 's/0\.92\.2/0.94/' src/wp/configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -255,6 +259,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Aug 27 2012 Jerry James <loganjerry@gmail.com> - 1.7-8
+- Use a vastly simpler patch for OCaml 4 that fixes the native build.
+
 * Fri Aug  3 2012 Jerry James <loganjerry@gmail.com> - 1.7-7
 - Shipping the bytecode version works better if it isn't stripped.
 
