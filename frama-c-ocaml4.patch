@@ -1,28 +1,73 @@
 --- ./cil/ocamlutil/inthash.ml.orig	2011-10-10 02:40:09.000000000 -0600
-+++ ./cil/ocamlutil/inthash.ml	2012-08-27 15:09:37.694716225 -0600
-@@ -61,6 +61,12 @@ let clear h =
++++ ./cil/ocamlutil/inthash.ml	2012-09-11 13:51:28.890411361 -0600
+@@ -43,7 +43,9 @@
+ type key = int
+ type 'a t =
+   { mutable size: int;                        (* number of elements *)
+-    mutable data: 'a bucketlist array } (* the buckets *)
++    mutable data: 'a bucketlist array;        (* the buckets *)
++    initial_size: int                         (* initial array size *)
++  }
+ 
+ and 'a bucketlist =
+     Empty
+@@ -53,7 +55,7 @@ let hash key = key land 0x3fffffff
+ 
+ let create initial_size =
+   let s = min (max 1 initial_size) Sys.max_array_length in
+-  { size = 0; data = Array.make s Empty }
++  { size = 0; data = Array.make s Empty; initial_size = s }
+ 
+ let clear h =
+   for i = 0 to Array.length h.data - 1 do
+@@ -61,9 +63,19 @@ let clear h =
    done;
    h.size <- 0
  
 +let reset h =
-+  for i = 0 to Array.length h.data - 1 do
-+    h.data.(i) <- Empty
-+  done;
-+  h.size <- 0
++  let len = Array.length h.data in
++  if (len = h.initial_size) then
++    clear h
++  else begin
++    h.size <- 0;
++    h.data <- Array.make h.initial_size Empty
++  end
 +
  let copy h =
    { size = h.size;
-     data = Array.copy h.data }
-@@ -228,3 +234,7 @@ let memoize (h: 'a t) (key: int) (f: int
-   
- let tolist (h: 'a t) : (int * 'a) list = 
-   fold (fun k d acc -> (k, d) :: acc) h []
+-    data = Array.copy h.data }
++    data = Array.copy h.data;
++    initial_size = h.size }
+ 
+ let copy_into src dest = 
+   dest.size <- src.size;
+@@ -197,6 +209,24 @@ let fold (f: int -> 'a -> 'b -> 'b) (h:
+   done;
+   !accu
+ 
++let rec bucket_length accu = function
++  | Empty -> accu
++  | Cons(_, _, rest) -> bucket_length (accu + 1) rest
 +
-+let stats h = 
-+  { Hashtbl.num_bindings = h.size; Hashtbl.num_buckets = Array.length h.data;
-+    Hashtbl.max_bucket_length = 1; Hashtbl.bucket_histogram = Array.make 2 0 }
++let stats h =
++  let mbl =
++    Array.fold_left (fun m b -> max m (bucket_length 0 b)) 0 h.data in
++  let histo = Array.make (mbl + 1) 0 in
++  Array.iter
++    (fun b ->
++      let l = bucket_length 0 b in
++      histo.(l) <- histo.(l) + 1)
++    h.data;
++  { Hashtbl.num_bindings = h.size;
++    Hashtbl.num_buckets = Array.length h.data;
++    Hashtbl.max_bucket_length = mbl;
++    Hashtbl.bucket_histogram = histo }
++
+ 
+ let memoize (h: 'a t) (key: int) (f: int -> 'a) : 'a = 
+   let i = (hash key) mod (Array.length h.data) in
 --- ./cil/ocamlutil/inthash.mli.orig	2011-10-10 02:40:09.000000000 -0600
-+++ ./cil/ocamlutil/inthash.mli	2012-08-27 14:54:00.594502979 -0600
++++ ./cil/ocamlutil/inthash.mli	2012-09-11 13:50:55.629057606 -0600
 @@ -50,6 +50,7 @@ type 'a t
  
  val create: int -> 'a t
@@ -40,3 +85,22 @@
  val memoize: 'a t -> int -> (int -> 'a) -> 'a
  
  val tolist: 'a t -> (int * 'a) list
+--- ./src/type/type.ml.orig	2011-10-10 02:38:09.000000000 -0600
++++ ./src/type/type.ml	2012-09-11 13:50:55.632057414 -0600
+@@ -460,14 +460,10 @@ end = struct
+           let tag = Obj.tag x in
+           if tag = 0 then
+             0
+-          else if tag = Obj.closure_tag then
+-            (* assumes that the first word of a closure does not change in
+-               any way (even by Gc.compact invokation). *)
+-            Obj.magic (Obj.field x 0)
+           else
+             Hashtbl.hash x
+-          else
+-            0
++        else
++          0
+     end)
+ 
+   type 'a t = 'a O.t Tbl.t

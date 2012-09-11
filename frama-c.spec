@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.7
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -31,8 +31,8 @@ Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
-# Adapt to changes in Hashtbl signature in OCaml 4.00.0.  An equivalent patch
-# has been submitted upstream.
+# Adapt to changes in Hashtbl signature in OCaml 4.00.0.  Disable dangerous
+# code that leads to segfaults in OCaml 4.00.0.
 Patch0:         frama-c-ocaml4.patch
 # Adapt to changes in ocaml-ocamlgraph.  Submitted upstream.
 Patch1:         frama-c-ocamlgraph.patch
@@ -171,19 +171,15 @@ make %{framac_make_options}
 %install
 make install DESTDIR=%{buildroot} %{framac_make_options}
 
-# The native version is currently broken with OCaml 4.00.0.
-# Package the bytecode version until the source of the breakage is found.
+%if %opt
+strip %{buildroot}%{_bindir}/frama-c
+strip %{buildroot}%{_bindir}/frama-c-gui
+strip %{buildroot}%{_libdir}/frama-c/plugins/*.cmxs
+strip %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cmxs
+%else
 mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
-#%%if %%opt
-#strip %%{buildroot}%%{_bindir}/frama-c
-#strip %%{buildroot}%%{_bindir}/frama-c-gui
-#strip %%{buildroot}%%{_libdir}/frama-c/plugins/*.cmxs
-#strip %%{buildroot}%%{_libdir}/frama-c/plugins/gui/*.cmxs
-#%else
-#mv -f %%{buildroot}%{_bindir}/frama-c.byte %%{buildroot}%%{_bindir}/frama-c
-#mv -f %%{buildroot}%{_bindir}/frama-c-gui.byte %%{buildroot}%%{_bindir}/frama-c-gui
-#%%endif
+%endif
 desktop-file-install                                    \
 --dir=${RPM_BUILD_ROOT}%{_datadir}/applications/         \
 %{SOURCE2}
@@ -259,6 +255,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue Sep 11 2012 Jerry James <loganjerry@gmail.com> - 1.7-9
+- Disable dangerous code in src/type/type.ml that leads to segfaults.
+
 * Mon Aug 27 2012 Jerry James <loganjerry@gmail.com> - 1.7-8
 - Use a vastly simpler patch for OCaml 4 that fixes the native build.
 
