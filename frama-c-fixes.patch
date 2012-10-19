@@ -1,0 +1,13 @@
+Index: src/pdg_types/pdgTypes.ml
+===================================================================
+--- src/pdg_types/pdgTypes.ml	(révision 20081)
++++ src/pdg_types/pdgTypes.ml	(révision 20082)
+@@ -701,7 +701,7 @@
+         in (`Color color) :: attrib
+       in
+       let attrib =
+-        if Dpd.is_ctrl d then (`Arrowhead `Odot)::attrib else attrib
++        if Dpd.is_ctrl d then (`Arrowtail `Odot)::attrib else attrib
+       in
+       let attrib =
+         if Dpd.is_addr d then (`Style `Dotted)::attrib else attrib

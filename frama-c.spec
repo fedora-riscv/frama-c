@@ -16,11 +16,11 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Nitrogen-20111001
+%global pkgversion Oxygen-20120901
 
 Name:           frama-c
-Version:        1.7
-Release:        9%{?dist}
+Version:        1.8
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -31,11 +31,8 @@ Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
-# Adapt to changes in Hashtbl signature in OCaml 4.00.0.  Disable dangerous
-# code that leads to segfaults in OCaml 4.00.0.
-Patch0:         frama-c-ocaml4.patch
-# Adapt to changes in ocaml-ocamlgraph.  Submitted upstream.
-Patch1:         frama-c-ocamlgraph.patch
+# Post-release fixes from upstream
+Patch0:         %{name}-fixes.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -140,19 +137,14 @@ support.
 %prep
 %setup -q -n %{name}-%pkgversion
 %patch0
-%patch1
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
-# Version 1.8 of ocamlgraph is good, therefore 1.8.X is good, too.
-# Also adapt to OCaml 4.00.0 and alt-ergo 0.94
-sed -e 's|1\.8)|1.8*)|' \
-    -e 's/3\.1\*/3.1*|4*/' \
-    -e 's/0\.92\.2/0.94/' \
-    -i configure
+# Allow use of alt-ergo 0.94
+sed -i 's/0\.92\.2/0.94/' configure
 sed -i 's/0\.92\.2/0.94/' src/wp/configure
 
 %build
@@ -255,6 +247,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Fri Oct 19 2012 Jerry James <loganjerry@gmail.com> - 1.8-1
+- Update to Oxygen version
+
 * Tue Sep 11 2012 Jerry James <loganjerry@gmail.com> - 1.7-9
 - Disable dangerous code in src/type/type.ml that leads to segfaults.
 
