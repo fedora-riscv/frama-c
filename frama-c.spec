@@ -45,6 +45,7 @@ BuildRequires:  ltl2ba
 BuildRequires:  ocaml
 BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
+BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
 
 Requires:       cpp
@@ -227,10 +228,14 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %exclude %{_datadir}/frama-c/manuals
 
 %files doc
-%doc doc/manuals/acsl* doc/manuals/aorai-manual.pdf
-%doc doc/manuals/jessie-tutorial.pdf doc/manuals/metrics-manual.pdf
-%doc doc/manuals/rte-manual.pdf doc/manuals/value-analysis.pdf
+%doc doc/code/*.txt
+%doc doc/manuals/acsl*
+%doc doc/manuals/aorai-manual.pdf
+%doc doc/manuals/metrics-manual.pdf
+%doc doc/manuals/rte-manual.pdf
+%doc doc/manuals/value-analysis.pdf
 %doc doc/manuals/wp-manual.pdf
+%doc doc/manuals/wp-tutorial.pdf
 
 %files emacs
 %{_emacs_sitelispdir}/acsl.elc
