@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.8
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -56,7 +56,7 @@ Requires:       ltl2ba
 ExclusiveArch:  %{ocaml_arches}
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\(((Formula)|(GtkSourceView2_types)|(Ltlast)|(Mcfg)|(Mfloat)|(Mint)|(Mlogic)|(Mvalues)|(Mwp)|(Promelaast)|(Sig))\\\)
+%global __requires_exclude ocaml\\\((Formula|GtkSourceView2_types|Ltlast|Mcfg|Memory|Mfloat|Mint|Mlogic|Mvalues|Mwp|Promelaast)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -252,6 +252,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Oct 22 2012 Jerry James <loganjerry@gmail.com> - 1.8-2
+- Update the Requires filter for Oxygen
+
 * Fri Oct 19 2012 Jerry James <loganjerry@gmail.com> - 1.8-1
 - Update to Oxygen version
 
