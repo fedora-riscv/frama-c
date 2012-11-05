@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.8
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -38,6 +38,7 @@ BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  emacs-nox xemacs-nox
+BuildRequires:  gmp-devel
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
@@ -47,6 +48,7 @@ BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
+BuildRequires:  ocaml-zarith-devel
 
 Requires:       cpp
 Requires:       graphviz
@@ -252,6 +254,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Nov  5 2012 Jerry James <loganjerry@gmail.com> - 1.8-4
+- Build with zarith support
+
 * Mon Oct 22 2012 Jerry James <loganjerry@gmail.com> - 1.8-3
 - Update the Requires filter even more for Oxygen
 
