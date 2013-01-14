@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.8
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -146,9 +146,9 @@ iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
-# Allow use of alt-ergo 0.94
-sed -i 's/0\.92\.2/0.94/' configure
-sed -i 's/0\.92\.2/0.94/' src/wp/configure
+# Allow use of alt-ergo 0.95
+sed -i 's/0\.92\.2/0.95/' configure
+sed -i 's/0\.92\.2/0.95/' src/wp/configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -254,6 +254,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Jan 14 2013 Jerry James <loganjerry@gmail.com> - 1.8-5
+- Rebuild for coq 8.4pl1 and alt-ergo 0.95
+
 * Mon Nov  5 2012 Jerry James <loganjerry@gmail.com> - 1.8-4
 - Build with zarith support
 
