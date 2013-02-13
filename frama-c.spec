@@ -20,7 +20,7 @@
 
 Name:           frama-c
 Version:        1.8
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -254,6 +254,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
+
 * Mon Jan 14 2013 Jerry James <loganjerry@gmail.com> - 1.8-5
 - Rebuild for coq 8.4pl1 and alt-ergo 0.95
 
