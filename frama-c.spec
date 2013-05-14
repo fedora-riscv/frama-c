@@ -16,11 +16,11 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Oxygen-20120901
+%global pkgversion Fluorine-20130401
 
 Name:           frama-c
-Version:        1.8
-Release:        6%{?dist}
+Version:        1.9
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -54,6 +54,10 @@ Requires:       cpp
 Requires:       graphviz
 Requires:       ltl2ba
 
+# This can be removed once F-19 goes EOL
+Obsoletes:      %{name}-devel < 1.9-1
+Provides:       %{name}-devel = %{version}-%{release}
+
 # ocaml only available on these:
 ExclusiveArch:  %{ocaml_arches}
 
@@ -69,16 +73,6 @@ collaborative framework. The collaborative approach of Frama-C allows
 static analyzers to build upon the results already computed by other
 analyzers in the framework. Thanks to this approach, Frama-C provides
 sophisticated tools, such as a slicer and dependency analysis.
-
-%package devel
-Summary:        Development files for %{name}
-Group:          Development/Libraries
-Requires:       %{name}%{?_isa} = %{version}-%{release}
-
-%description devel
-The %{name}-devel package contains libraries and signature files for
-developing applications that use %{name}. In particular, this package
-is necessary to compile plug ins for Frama-C.
 
 %package doc
 Summary:        Large documentation files for %{name}
@@ -146,10 +140,6 @@ iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
 
-# Allow use of alt-ergo 0.95
-sed -i 's/0\.92\.2/0.95/' configure
-sed -i 's/0\.92\.2/0.95/' src/wp/configure
-
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
@@ -161,7 +151,9 @@ chmod a+x why why-dp
 PATH=${PATH}:${PWD}
 
 %configure
-make %{framac_make_options}
+# Harden the build due to network use
+make %{framac_make_options} \
+OLINKFLAGS="-I +zarith -I +ocamlgraph -I +lablgtk2 -ccopt -Wl,-z,relro,-z,now"
 
 %install
 make install DESTDIR=%{buildroot} %{framac_make_options}
@@ -204,40 +196,28 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %files
 %doc licenses/* doc/manuals/user-manual.pdf VERSION
 %{_bindir}/*
+%if %opt
 %exclude %{_bindir}/frama-c.byte
 %exclude %{_bindir}/frama-c-gui.byte
 %exclude %{_bindir}/ptests.byte
+%endif
 %exclude %{_libdir}/frama-c/*.cmo
 %exclude %{_libdir}/frama-c/*.cmx
 %exclude %{_libdir}/frama-c/*.o
-%{_libdir}/frama-c
-%dir %{_datadir}/frama-c/
-%{_datadir}/frama-c/*.gif
-%{_datadir}/frama-c/*.ico
-%{_datadir}/frama-c/*.png
+%{_libdir}/frama-c/
+%{_datadir}/frama-c/
 %{_datadir}/applications/*.desktop
 %{_mandir}/man1/*
-
-%files devel
-%doc doc/manuals/plugin-development-guide.pdf
-%{_datadir}/frama-c/*
-%{_libdir}/frama-c/*.cmo
-%{_libdir}/frama-c/*.cmx
-%{_libdir}/frama-c/*.o
-%exclude %{_datadir}/frama-c/*.gif
-%exclude %{_datadir}/frama-c/*.ico
-%exclude %{_datadir}/frama-c/*.png
-%exclude %{_datadir}/frama-c/manuals
 
 %files doc
 %doc doc/code/*.txt
 %doc doc/manuals/acsl*
 %doc doc/manuals/aorai-manual.pdf
 %doc doc/manuals/metrics-manual.pdf
+%doc doc/manuals/plugin-development-guide.pdf
 %doc doc/manuals/rte-manual.pdf
 %doc doc/manuals/value-analysis.pdf
 %doc doc/manuals/wp-manual.pdf
-%doc doc/manuals/wp-tutorial.pdf
 
 %files emacs
 %{_emacs_sitelispdir}/acsl.elc
@@ -254,6 +234,10 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue May 14 2013 Jerry James <loganjerry@gmail.com> - 1.9-1
+- Update to Fluorine version
+- Merge -devel into the main package (bz 888865)
+
 * Wed Feb 13 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.8-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_19_Mass_Rebuild
 
@@ -318,7 +302,7 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 * Sat Jan 22 2011 Dan Horák <dan[at]danny.cz> - 1.5-2
 - updated the supported arch list
 
-* Sat Jul 07 2010 Mark Rader <msrader@gmail.com> 1.5-1
+* Sat Jul 17 2010 Mark Rader <msrader@gmail.com> 1.5-1
 - Upgraded Frama C to Boron version and added ltl2ba dependencies.
 
 * Mon Jul 05 2010 Mark Rader <msrader@gmail.com> 1.4-4
@@ -328,7 +312,7 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 - Added documentation to explain the various licensing entries.
 - Added .desktop file
 
-* Wed May 24 2010 Mark Rader <msrader@gmail.com> 1.4-2
+* Wed May 26 2010 Mark Rader <msrader@gmail.com> 1.4-2
 - Add SELinux context settings.
 
 * Wed Feb 10 2010 Alan Dunn <amdunn@gmail.com> 1.4-1

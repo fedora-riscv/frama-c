@@ -1,13 +1,224 @@
-Index: src/pdg_types/pdgTypes.ml
-===================================================================
---- src/pdg_types/pdgTypes.ml	(révision 20081)
-+++ src/pdg_types/pdgTypes.ml	(révision 20082)
-@@ -701,7 +701,7 @@
-         in (`Color color) :: attrib
-       in
-       let attrib =
--        if Dpd.is_ctrl d then (`Arrowhead `Odot)::attrib else attrib
-+        if Dpd.is_ctrl d then (`Arrowtail `Odot)::attrib else attrib
-       in
-       let attrib =
-         if Dpd.is_addr d then (`Style `Dotted)::attrib else attrib
+--- ./src/wp/LogicSemantics.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/LogicSemantics.ml	2013-05-08 14:34:37.762596322 -0600
+@@ -401,7 +401,7 @@ struct
+ 	  let te = Logic_typing.ctype_of_pointed a.term_type in
+ 	  let la = loc_of_term env a in
+ 	  let lb = loc_of_term env b in
+-	  Vexp(M.loc_offset (Ctypes.object_of te) la lb)
++	  Vexp(M.loc_diff (Ctypes.object_of te) la lb)
+       | Shiftlt -> L.apply Cint.l_lsl (C.logic env a) (C.logic env b)
+       | Shiftrt -> L.apply Cint.l_lsr (C.logic env a) (C.logic env b)
+       | BAnd -> L.apply Cint.l_and (C.logic env a) (C.logic env b)
+--- ./src/wp/MemEmpty.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/MemEmpty.ml	2013-05-08 14:34:37.761596324 -0600
+@@ -93,7 +93,7 @@ let loc_eq _ _ = no_pointer ()
+ let loc_lt _ _ = no_pointer ()
+ let loc_leq _ _ = no_pointer ()
+ let loc_neq _ _ = no_pointer ()
+-let loc_offset _ _ _ = no_pointer ()
++let loc_diff _ _ _ = no_pointer ()
+ 
+ let valid _sigma _l = Warning.error ~source "No validity"
+ let scope sigma _s _xs = sigma , []
+--- ./src/wp/ProverWhy3.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/ProverWhy3.ml	2013-05-08 14:51:43.973920953 -0600
+@@ -70,8 +70,8 @@ let engine =
+   let module E = Qed.Export_why3.Make(Lang.F) in
+ object(self)
+   inherit E.engine
+-  method datatype = ADT.id
+-  method field = Field.id
++  method datatype x = self#basename (ADT.id x)
++  method field x = self#basename (Field.id x)
+   method link e f =
+     match Lang.link e f with
+       | Engine.F_call   s ->
+--- ./src/wp/Memory.mli.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/Memory.mli	2013-05-08 14:34:37.762596322 -0600
+@@ -153,7 +153,7 @@ sig
+   val loc_lt : loc -> loc -> pred
+   val loc_neq : loc -> loc -> pred
+   val loc_leq : loc -> loc -> pred
+-  val loc_offset : c_object -> loc -> loc -> term
++  val loc_diff : c_object -> loc -> loc -> term
+ 
+   val valid : sigma -> acs -> segment -> pred
+   val scope : sigma -> Mcfg.scope -> varinfo list -> sigma * pred list
+--- ./src/wp/MemVar.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/MemVar.ml	2013-05-08 14:34:37.760596325 -0600
+@@ -427,12 +427,12 @@ struct
+     | Field f :: ofs -> e_add (e_int64 (Ctypes.field_offset f)) (offset ofs)
+     | Index(obj,k)::ofs -> e_add (e_fact (Ctypes.sizeof_object obj) k) (offset ofs)
+ 
+-  let loc_offset obj a b =
++  let loc_diff obj a b =
+     match a , b with
+-      | Mloc l1 , Mloc l2 -> M.loc_offset obj l1 l2
++      | Mloc l1 , Mloc l2 -> M.loc_diff obj l1 l2
+       | Fref x , Fref y when Varinfo.equal x y -> e_zero
+       | (Fval(x,p)|Mval(x,p)) , (Fval(y,q)|Mval(y,q)) when Varinfo.equal x y ->
+-	  e_div (e_sub (offset p) (offset q)) (e_int64 (sizeof_object obj))
++	  e_div (e_sub (offset p) (offset q)) (e_int64 (Ctypes.sizeof_object obj))
+       | Mval _ , _ | _ , Mval _
+       | Fval _ , _ | _ , Fval _
+       | Fref _ , _ | _ , Fref _
+--- ./src/wp/ctypes.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/ctypes.ml	2013-05-08 14:34:37.760596325 -0600
+@@ -45,12 +45,18 @@ let signed  = function
+   | UInt8 | UInt16 | UInt32 | UInt64 -> false
+   | SInt8 | SInt16 | SInt32 | SInt64 -> true
+ 
+-let i_sizeof = function
++let i_bits = function
+   | UInt8  | SInt8  -> 8
+   | UInt16 | SInt16 -> 16
+   | UInt32 | SInt32 -> 32
+   | UInt64 | SInt64 -> 64
+ 
++let i_bytes = function
++  | UInt8  | SInt8  -> 1
++  | UInt16 | SInt16 -> 2
++  | UInt32 | SInt32 -> 4
++  | UInt64 | SInt64 -> 8
++
+ let make_c_int signed = function
+   | 1 -> if signed then SInt8 else UInt8
+   | 2 -> if signed then SInt16 else UInt16
+@@ -103,8 +109,8 @@ let c_ptr () =
+   make_c_int false Cil.theMachine.Cil.theMachine.sizeof_ptr
+ 
+ let sub_c_int t1 t2 =
+-  if (signed t1 = signed t2) then i_sizeof t1 <= i_sizeof t2
+- else (not(signed t1) && (i_sizeof t1 < i_sizeof t2))
++  if (signed t1 = signed t2) then i_bits t1 <= i_bits t2
++ else (not(signed t1) && (i_bits t1 < i_bits t2))
+ 
+ type c_float =
+   | Float32
+@@ -112,7 +118,11 @@ type c_float =
+ 
+ let compare_c_float : c_float -> c_float -> _ = Extlib.compare_basic
+ 
+-let f_sizeof = function
++let f_bytes = function
++  | Float32 -> 4
++  | Float64 -> 8
++
++let f_bits = function
+   | Float32 -> 32
+   | Float64 -> 64
+ 
+@@ -128,7 +138,7 @@ let c_float fkind =
+     | FDouble -> make_c_float mach.sizeof_double
+     | FLongDouble -> make_c_float mach.sizeof_longdouble
+ 
+-let sub_c_float f1 f2 = f_sizeof f1 <= f_sizeof f2
++let sub_c_float f1 f2 = f_bits f1 <= f_bits f2
+ 
+ (* Array objects, with both the head view and the flatten view. *)
+ 
+@@ -191,9 +201,9 @@ let fmemo f =
+ (* -------------------------------------------------------------------------- *)
+ 
+ let pp_int fmt i = Format.fprintf fmt "%cint%d"
+-  (if signed i then 's' else 'u') (i_sizeof i)
++  (if signed i then 's' else 'u') (i_bits i)
+ 
+-let pp_float fmt f = Format.fprintf fmt "float%d" (f_sizeof f)
++let pp_float fmt f = Format.fprintf fmt "float%d" (f_bits f)
+ 
+ let pp_object fmt = function
+   | C_int i -> pp_int fmt i
+@@ -349,9 +359,9 @@ let int64_max a b =
+   if Int64.compare a b < 0 then b else a
+ 
+ let rec sizeof_object = function
+- | C_int i -> Int64.of_int (i_sizeof i)
+- | C_float f -> Int64.of_int (f_sizeof f)
+- | C_pointer _ty -> Int64.of_int (i_sizeof (c_ptr()))
++ | C_int i -> Int64.of_int (i_bytes i)
++ | C_float f -> Int64.of_int (f_bytes f)
++ | C_pointer _ty -> Int64.of_int (i_bytes (c_ptr()))
+  | C_comp cinfo ->
+      let merge = if cinfo.cstruct then Int64.add else int64_max in
+      List.fold_left
+@@ -398,8 +408,8 @@ let field_offset f =
+ (* with greater rank, whatever      *)
+ (* their sign.                      *)
+ 
+-let i_convert t1 t2 = if i_sizeof t1 < i_sizeof t2 then t2 else t1
+-let f_convert t1 t2 = if f_sizeof t1 < f_sizeof t2 then t2 else t1
++let i_convert t1 t2 = if i_bits t1 < i_bits t2 then t2 else t1
++let f_convert t1 t2 = if f_bits t1 < f_bits t2 then t2 else t1
+ 
+ let promote a1 a2 =
+   match a1 , a2 with
+--- ./src/wp/CodeSemantics.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/CodeSemantics.ml	2013-05-08 14:34:37.761596324 -0600
+@@ -195,7 +195,7 @@ struct
+     | MinusPP ->
+ 	let te = Cil.typeOf_pointed (Cil.typeOf e1) in
+ 	let obj = Ctypes.object_of te in
+-	Val(M.loc_offset obj (loc_of_exp env e1) (loc_of_exp env e2))
++	Val(M.loc_diff obj (loc_of_exp env e1) (loc_of_exp env e2))
+ 
+   (* -------------------------------------------------------------------------- *)
+   (* --- Cast                                                               --- *)
+--- ./src/wp/share/memory.why.orig	2013-04-19 01:55:46.000000000 -0600
++++ ./src/wp/share/memory.why	2013-05-08 14:34:24.545614985 -0600
+@@ -26,11 +26,29 @@
+ 
+ theory Memory
+ 
++  use import bool.Bool
+   use import int.Int
+   use import map.Map
+ 
+   type addr = { base : int ; offset : int }
+ 
++  predicate addr_le addr addr 
++  predicate addr_lt addr addr
++  function addr_le_bool addr addr : bool
++  function addr_lt_bool addr addr : bool
++
++  axiom addr_le_def: forall p q :addr [addr_le p q].
++    p.base = q.base -> (addr_le p q <-> p.offset <= q.offset)
++
++  axiom addr_lt_def: forall p q :addr [addr_lt p q].
++    p.base = q.base -> (addr_le p q <-> p.offset < q.offset)
++
++  axiom addr_le_bool_def : forall p q : addr [ addr_le_bool p q].
++    addr_le p q <-> addr_le_bool p q = True
++
++  axiom addr_lt_bool_def : forall p q : addr [ addr_lt_bool p q].
++    addr_lt p q <-> addr_lt_bool p q = True
++
+   constant null : addr = { base = 0 ; offset = 0 }
+   function global (b:int) : addr = { base = b ; offset = 0 }
+   function shift (p:addr) (k:int) : addr = { p with offset = p.offset + k }
+--- ./src/wp/ctypes.mli.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/ctypes.mli	2013-05-08 14:34:37.762596322 -0600
+@@ -96,10 +96,6 @@ val c_int_bounds: c_int -> Qed.Z.t * Qed
+ 
+ (** All sizes are in bits *)
+ 
+-val i_sizeof  : c_int -> int
+-
+-val f_sizeof : c_float -> int
+-
+ val sub_c_int: c_int -> c_int -> bool
+ 
+ val sub_c_float : c_float -> c_float -> bool
+--- ./src/wp/MemTyped.ml.orig	2013-04-19 01:55:54.000000000 -0600
++++ ./src/wp/MemTyped.ml	2013-05-08 14:34:37.759596326 -0600
+@@ -875,8 +875,8 @@ let loc_eq = p_equal
+ let loc_neq = p_neq
+ let loc_lt = loc_compare a_lt p_lt
+ let loc_leq = loc_compare a_leq p_leq
+-let loc_offset obj p q = 
+-  let delta = e_sub (a_offset q) (a_offset p) in
++let loc_diff obj p q = 
++  let delta = e_sub (a_offset p) (a_offset q) in
+   e_fact (Ctypes.sizeof_object obj) delta
+ 
+ (* -------------------------------------------------------------------------- *)
