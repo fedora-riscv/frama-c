@@ -16,11 +16,11 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Fluorine-20130401
+%global pkgversion Fluorine-20130501
 
 Name:           frama-c
 Version:        1.9
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -31,8 +31,6 @@ Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
 Source3:        acsl.el
-# Post-release fixes from upstream
-Patch0:         %{name}-fixes.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -133,7 +131,6 @@ support.
 
 %prep
 %setup -q -n %{name}-%pkgversion
-%patch0
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
@@ -234,6 +231,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Thu May 23 2013 Jerry James <loganjerry@gmail.com> - 1.9-2
+- Update to bugfix Fluorine release
+
 * Tue May 14 2013 Jerry James <loganjerry@gmail.com> - 1.9-1
 - Update to Fluorine version
 - Merge -devel into the main package (bz 888865)
