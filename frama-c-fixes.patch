@@ -1,0 +1,50 @@
+See http://lists.gforge.inria.fr/pipermail/frama-c-discuss/2013-May/003637.html
+and http://lists.gforge.inria.fr/pipermail/frama-c-discuss/2013-May/003645.html.
+
+Index: src/wp/LogicCompiler.ml
+===================================================================
+--- src/wp/LogicCompiler.ml	(revision 22639)
++++ src/wp/LogicCompiler.ml	(working copy)
+@@ -606,16 +606,21 @@
+ 	 List.fold_left (heap_case labels_used) support s)
+       Heap.Map.empty cases in
+     (* Make signature with collected chunks *)
+-    let (parm,sigm) = Heap.Map.fold
+-      (fun chunk labels acc ->
+-	 let basename = Chunk.basename_of_chunk chunk in
+-	 let tau = Chunk.tau_of_chunk chunk in
+-	 LabelSet.fold
+-	   (fun label (parm,sigm) ->
+-	      let x = Lang.freshvar ~basename tau in
+-	      x :: parm , Sig_chunk(chunk,label) :: sigm
+-	   ) labels acc)
+-      support (parp,sigp) in
++    let (parm,sigm) = 
++      let frame = logic_frame l.l_var_info.lv_name l.l_tparams in
++      in_frame frame
++	(fun () -> 
++	   Heap.Map.fold
++	     (fun chunk labels acc ->
++		let basename = Chunk.basename_of_chunk chunk in
++		let tau = Chunk.tau_of_chunk chunk in
++		LabelSet.fold
++		  (fun label (parm,sigm) ->
++		     let x = Lang.freshvar ~basename tau in
++		     x :: parm , Sig_chunk(chunk,label) :: sigm
++		  ) labels acc)
++	     support (parp,sigp) 
++	) () in
+     (* Set global Signature *)
+     let lfun = ACSL l in
+     let ldef = {
+@@ -624,8 +629,9 @@
+       d_params = parm ;
+       d_cluster = cluster ;
+       d_definition = Logic Qed.Logic.Prop ;
+-    } in 
++    } in
+     Definitions.update_symbol ldef ;
++    Signature.update l (SIG sigm) ;
+     (* Re-compile final cases *)
+     let cases = List.map
+       (fun (case,labels,types,lemma) -> 
