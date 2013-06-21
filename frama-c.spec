@@ -16,11 +16,11 @@
 %global ocamlbest byte
 %endif
 
-%global pkgversion Fluorine-20130501
+%global pkgversion Fluorine-20130601
 
 Name:           frama-c
 Version:        1.9
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -234,6 +234,9 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Fri Jun 21 2013 Jerry James <loganjerry@gmail.com> - 1.9-4
+- Update to 20130601 bugfix Fluorine release
+
 * Mon Jun  3 2013 Jerry James <loganjerry@gmail.com> - 1.9-3
 - Add -fixes patch to fix code generation for inductive definitions
 
