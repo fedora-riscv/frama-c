@@ -7,8 +7,6 @@
 # are not availible with the ocaml-cil because the upstream has
 # forked their own version of cil.
 
-%global debug_package %{nil}
-%global __strip /usr/bin/true
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 %if %opt
 %global ocamlbest opt
@@ -20,7 +18,7 @@
 
 Name:           frama-c
 Version:        1.9
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -33,6 +31,8 @@ Source2:        %{name}-gui.desktop
 Source3:        acsl.el
 # Post-release fixes from upstream
 Patch0:         %{name}-fixes.patch
+# Adapt to OCaml 4.01.0
+Patch1:         %{name}-ocaml401.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -134,11 +134,15 @@ support.
 %prep
 %setup -q -n %{name}-%pkgversion
 %patch0
+%patch1
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
 touch -r man/frama-c.1 man/frama-c.1.conv
 mv -f man/frama-c.1.conv man/frama-c.1
+
+# Enable debuginfo
+sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/wp/qed/src/Makefile
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -158,12 +162,7 @@ OLINKFLAGS="-I +zarith -I +ocamlgraph -I +lablgtk2 -ccopt -Wl,-z,relro,-z,now"
 %install
 make install DESTDIR=%{buildroot} %{framac_make_options}
 
-%if %opt
-strip %{buildroot}%{_bindir}/frama-c
-strip %{buildroot}%{_bindir}/frama-c-gui
-strip %{buildroot}%{_libdir}/frama-c/plugins/*.cmxs
-strip %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cmxs
-%else
+%if ! %opt
 mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
 %endif
@@ -188,10 +187,12 @@ cd %{buildroot}%{_emacs_sitelispdir}
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
 
+# Remove files we don't actually want
+rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
+
 # The install step adds lots of spurious executable bits
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 | \
-xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
-                %{buildroot}%{_mandir}/man1/*
+xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 
 %files
 %doc licenses/* doc/manuals/user-manual.pdf VERSION
@@ -201,9 +202,6 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %exclude %{_bindir}/frama-c-gui.byte
 %exclude %{_bindir}/ptests.byte
 %endif
-%exclude %{_libdir}/frama-c/*.cmo
-%exclude %{_libdir}/frama-c/*.cmx
-%exclude %{_libdir}/frama-c/*.o
 %{_libdir}/frama-c/
 %{_datadir}/frama-c/
 %{_datadir}/applications/*.desktop
@@ -234,6 +232,10 @@ xargs chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmx \
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Sep 16 2013 Jerry James <loganjerry@gmail.com> - 1.9-7
+- Rebuild for OCaml 4.01.0
+- Enable debuginfo
+
 * Fri Aug  9 2013 Jerry James <loganjerry@gmail.com> - 1.9-6
 - Update -fixes patch to fix startup failures on ARM
 
