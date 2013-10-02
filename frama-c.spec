@@ -18,7 +18,7 @@
 
 Name:           frama-c
 Version:        1.9
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -232,6 +232,9 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Wed Oct 02 2013 Richard W.M. Jones <rjones@redhat.com> - 1.9-8
+- Rebuild for ocaml-lablgtk 2.18.
+
 * Mon Sep 16 2013 Jerry James <loganjerry@gmail.com> - 1.9-7
 - Rebuild for OCaml 4.01.0
 - Enable debuginfo
