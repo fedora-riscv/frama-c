@@ -12,13 +12,14 @@
 %global ocamlbest opt
 %else
 %global ocamlbest byte
+%global debug_package %{nil}
 %endif
 
 %global pkgversion Fluorine-20130601
 
 Name:           frama-c
 Version:        1.9
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -28,11 +29,14 @@ URL:            http://frama-c.com/
 Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        frama-c-1.6.licensing
 Source2:        %{name}-gui.desktop
-Source3:        acsl.el
+Source3:        %{name}-gui.appdata.xml
+Source4:        acsl.el
 # Post-release fixes from upstream
 Patch0:         %{name}-fixes.patch
 # Adapt to OCaml 4.01.0
 Patch1:         %{name}-ocaml401.patch
+# Adapt to ocamlgraph 1.8.4
+Patch2:         %{name}-ocamlgraph.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -135,6 +139,7 @@ support.
 %setup -q -n %{name}-%pkgversion
 %patch0
 %patch1
+%patch2
 
 # Fix encodings
 iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
@@ -166,9 +171,13 @@ make install DESTDIR=%{buildroot} %{framac_make_options}
 mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
 %endif
-desktop-file-install                                    \
---dir=${RPM_BUILD_ROOT}%{_datadir}/applications/         \
-%{SOURCE2}
+
+# Install the desktop file
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE2}
+
+# Install the AppData file
+mkdir -p %{buildroot}%{_datadir}/appdata
+install -pm 644 %{SOURCE3} %{buildroot}%{_datadir}/appdata
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
@@ -176,7 +185,7 @@ cp -p share/acsl.el %{buildroot}%{_xemacs_sitelispdir}
 cd %{buildroot}%{_xemacs_sitelispdir}
 %{_xemacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_xemacs_sitestartdir}
-cp -p %{SOURCE3} %{buildroot}%{_xemacs_sitestartdir}
+cp -p %{SOURCE4} %{buildroot}%{_xemacs_sitestartdir}
 
 # Install and bytecompile the Emacs file
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
@@ -185,7 +194,7 @@ chmod a-x %{buildroot}%{_emacs_sitelispdir}/acsl.el
 cd %{buildroot}%{_emacs_sitelispdir}
 %{_emacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
-cp -p %{SOURCE3} %{buildroot}%{_emacs_sitestartdir}
+cp -p %{SOURCE4} %{buildroot}%{_emacs_sitestartdir}
 
 # Remove files we don't actually want
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
@@ -204,6 +213,7 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %endif
 %{_libdir}/frama-c/
 %{_datadir}/frama-c/
+%{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/*.desktop
 %{_mandir}/man1/*
 
@@ -232,6 +242,10 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Wed Feb 26 2014 Jerry James <loganjerry@gmail.com> - 1.9-9
+- Rebuild for ocaml-ocamlgraph 1.8.4; add -ocamlgraph patch to adapt.
+- Add an Appdata file.
+
 * Wed Oct 02 2013 Richard W.M. Jones <rjones@redhat.com> - 1.9-8
 - Rebuild for ocaml-lablgtk 2.18.
 

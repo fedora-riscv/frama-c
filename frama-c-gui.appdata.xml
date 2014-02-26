@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application>
+ <id type="desktop">frama-c-gui.desktop</id>
+ <licence>CC0</licence>
+ <description>
+  <p>
+   Frama-C is a suite of tools dedicated to the analysis of the source code of
+   software written in C.
+  </p>
+  <p>
+   Frama-C gathers several static analysis techniques in a single collaborative
+   framework.  The collaborative approach of Frama-C allows static analyzers to
+   build upon the results already computed by other analyzers in the framework.
+   Thanks to this approach, Frama-C provides sophisticated tools, such as a
+   slicer and dependency analysis.
+  </p>
+ </description>
+ <screenshots>
+  <screenshot type="default">http://frama-c.com/media/first.png</screenshot>
+  <screenshot>http://frama-c.com/media/first_S.png</screenshot>
+  <screenshot>http://frama-c.com/media/first_effect.png</screenshot>
+  <screenshot>http://frama-c.com/media/first_defs.png</screenshot>
+  <screenshot>http://frama-c.com/media/first_impact.png</screenshot>
+ </screenshots>
+ <url type="homepage">http://frama-c.com/</url>
+ <!-- FIXME: change this to an upstream email address for spec updates
+         <updatecontact>someone_who_cares@upstream_project.org</updatecontact>
+  -->
+</application>
