@@ -8,18 +8,15 @@
 # forked their own version of cil.
 
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
-%if %opt
-%global ocamlbest opt
-%else
-%global ocamlbest byte
+%if ! %opt
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Fluorine-20130601
+%global pkgversion Neon-20140301
 
 Name:           frama-c
-Version:        1.9
-Release:        9%{?dist}
+Version:        1.10
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -27,16 +24,19 @@ Group:          Development/Libraries
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
 URL:            http://frama-c.com/
 Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
-Source1:        frama-c-1.6.licensing
-Source2:        %{name}-gui.desktop
-Source3:        %{name}-gui.appdata.xml
-Source4:        acsl.el
-# Post-release fixes from upstream
-Patch0:         %{name}-fixes.patch
-# Adapt to OCaml 4.01.0
-Patch1:         %{name}-ocaml401.patch
-# Adapt to ocamlgraph 1.8.4
-Patch2:         %{name}-ocamlgraph.patch
+Source1:        http://frama-c.com/download/%{name}-%{pkgversion}_api.tar.gz
+Source2:        frama-c-1.6.licensing
+Source3:        %{name}-gui.desktop
+Source4:        %{name}-gui.appdata.xml
+Source5:        acsl.el
+Source6:        http://frama-c.com/download/user-manual-%{pkgversion}.pdf
+Source7:        http://frama-c.com/download/plugin-development-guide-%{pkgversion}.pdf
+Source8:        http://frama-c.com/download/acsl-implementation-%{pkgversion}.pdf
+Source9:        http://frama-c.com/download/aorai-manual-%{pkgversion}.pdf
+Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
+Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
+Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
+Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -48,11 +48,12 @@ BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  ltl2ba
 BuildRequires:  ocaml
-BuildRequires:  ocaml-findlib-devel
+BuildRequires:  ocaml-findlib
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
 BuildRequires:  ocaml-zarith-devel
+BuildRequires:  why3
 
 Requires:       cpp
 Requires:       graphviz
@@ -66,7 +67,7 @@ Provides:       %{name}-devel = %{version}-%{release}
 ExclusiveArch:  %{ocaml_arches}
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Formula|GtkSourceView2_types|Ltlast|Mcfg|Memory|Mfloat|Mint|Mlogic|Mvalues|Mwp|Promelaast|Sig)\\\)
+%global __requires_exclude ocaml\\\((CfgTypes|GtkSourceView2_types|Ltlast|Mcfg|Memory|Promelaast)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -136,48 +137,63 @@ files marked up with ACSL.  This package is not needed to use the XEmacs
 support.
 
 %prep
-%setup -q -n %{name}-%pkgversion
-%patch0
-%patch1
-%patch2
+%setup -q -n %{name}-%{pkgversion}
+%setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 
-# Fix encodings
-iconv -f iso-8859-1 -t utf8 man/frama-c.1 > man/frama-c.1.conv
-touch -r man/frama-c.1 man/frama-c.1.conv
-mv -f man/frama-c.1.conv man/frama-c.1
+# Copy in the manuals
+mkdir doc/manuals
+cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
+   %{SOURCE12} %{SOURCE13} doc/manuals
+
+# Do not use the bundled version of ocamlgraph
+rm -f ocamlgraph.tar.gz
 
 # Enable debuginfo
 sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/wp/qed/src/Makefile
 
+# Preserve timestamps when installing
+sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
+
+# Remove spurious executable bits
+find -O3 . -perm /0111 \( -name \*.ml -o -name \*.mli \) | xargs chmod 0644
+
+# Adapt to why3 0.83
+sed -i 's/0\.82/0.83/g' configure src/wp/configure
+
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
-%global framac_make_options VERBOSEMAKE=yes OCAMLBEST=%{ocamlbest}
-
-# Fake the existence of why so the plugin is built
-touch why why-dp
-chmod a+x why why-dp
-PATH=${PATH}:${PWD}
-
-%configure
+%configure --enable-verbosemake
 # Harden the build due to network use
-make %{framac_make_options} \
+make \
 OLINKFLAGS="-I +zarith -I +ocamlgraph -I +lablgtk2 -ccopt -Wl,-z,relro,-z,now"
 
-%install
-make install DESTDIR=%{buildroot} %{framac_make_options}
+# Remove spurious executable bits on generated files
+chmod 0644 src/lib/dynlink_common_interface.ml src/lib/integer.ml
 
-%if ! %opt
+%install
+# Prevent rebuilds containing the buildroot when installing
+sed -i.orig 's/^headers::/headers:/' Makefile
+touch -r Makefile.orig Makefile
+sed -i.orig '/^headers::/,/^$/d' src/aorai/Makefile
+touch -r src/aorai/Makefile.orig src/aorai/Makefile
+
+make install DESTDIR=%{buildroot}
+
+%if %opt
+mv -f %{buildroot}%{_bindir}/ptests.opt %{buildroot}%{_bindir}/ptests
+%else
 mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
+mv -f %{buildroot}%{_bindir}/ptests.byte %{buildroot}%{_bindir}/ptests
 %endif
 
 # Install the desktop file
-desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE2}
+desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE3}
 
 # Install the AppData file
 mkdir -p %{buildroot}%{_datadir}/appdata
-install -pm 644 %{SOURCE3} %{buildroot}%{_datadir}/appdata
+install -pm 644 %{SOURCE4} %{buildroot}%{_datadir}/appdata
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
@@ -185,7 +201,7 @@ cp -p share/acsl.el %{buildroot}%{_xemacs_sitelispdir}
 cd %{buildroot}%{_xemacs_sitelispdir}
 %{_xemacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_xemacs_sitestartdir}
-cp -p %{SOURCE4} %{buildroot}%{_xemacs_sitestartdir}
+cp -p %{SOURCE5} %{buildroot}%{_xemacs_sitestartdir}
 
 # Install and bytecompile the Emacs file
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
@@ -194,7 +210,7 @@ chmod a-x %{buildroot}%{_emacs_sitelispdir}/acsl.el
 cd %{buildroot}%{_emacs_sitelispdir}
 %{_emacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
-cp -p %{SOURCE4} %{buildroot}%{_emacs_sitestartdir}
+cp -p %{SOURCE5} %{buildroot}%{_emacs_sitestartdir}
 
 # Remove files we don't actually want
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
@@ -204,7 +220,7 @@ find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 | \
 xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 
 %files
-%doc licenses/* doc/manuals/user-manual.pdf VERSION
+%doc licenses/* VERSION
 %{_bindir}/*
 %if %opt
 %exclude %{_bindir}/frama-c.byte
@@ -218,14 +234,16 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_mandir}/man1/*
 
 %files doc
-%doc doc/code/*.txt
-%doc doc/manuals/acsl*
-%doc doc/manuals/aorai-manual.pdf
-%doc doc/manuals/metrics-manual.pdf
-%doc doc/manuals/plugin-development-guide.pdf
-%doc doc/manuals/rte-manual.pdf
-%doc doc/manuals/value-analysis.pdf
-%doc doc/manuals/wp-manual.pdf
+%doc doc/code/*.{css,htm,txt}
+%doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
+%doc doc/manuals/aorai-manual-%{pkgversion}.pdf
+%doc doc/manuals/metrics-manual-%{pkgversion}.pdf
+%doc doc/manuals/plugin-development-guide-%{pkgversion}.pdf
+%doc doc/manuals/rte-manual-%{pkgversion}.pdf
+%doc doc/manuals/user-manual-%{pkgversion}.pdf
+%doc doc/manuals/value-analysis-%{pkgversion}.pdf
+%doc doc/manuals/wp-manual-%{pkgversion}.pdf
+%doc frama-c-api
 
 %files emacs
 %{_emacs_sitelispdir}/acsl.elc
@@ -242,6 +260,13 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Mar 17 2014 Jerry James <loganjerry@gmail.com> - 1.10-1
+- Update to Neon version
+- All patches have been upstreamed; drop them
+- The manuals are no longer included in the source distribution; add as Sources
+- BR ocaml-findlib instead of ocaml-findlib-devel
+- BR why3 to get coq + why3 support in the wp plugin
+
 * Wed Feb 26 2014 Jerry James <loganjerry@gmail.com> - 1.9-9
 - Rebuild for ocaml-ocamlgraph 1.8.4; add -ocamlgraph patch to adapt.
 - Add an Appdata file.
