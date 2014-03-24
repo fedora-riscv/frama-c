@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -37,12 +37,13 @@ Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
+# Icons created with gimp from the official upstream icon
+Source14:       %{name}-icons.tar.xz
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  emacs-nox xemacs-nox
-BuildRequires:  gmp-devel
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
@@ -57,6 +58,7 @@ BuildRequires:  why3
 
 Requires:       cpp
 Requires:       graphviz
+Requires:       hicolor-icon-theme
 Requires:       ltl2ba
 
 # This can be removed once F-19 goes EOL
@@ -139,6 +141,7 @@ support.
 %prep
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
+%setup -q -T -D -a 14 -n %{name}-%{pkgversion}
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -168,9 +171,6 @@ sed -i 's/0\.82/0.83/g' configure src/wp/configure
 make \
 OLINKFLAGS="-I +zarith -I +ocamlgraph -I +lablgtk2 -ccopt -Wl,-z,relro,-z,now"
 
-# Remove spurious executable bits on generated files
-chmod 0644 src/lib/dynlink_common_interface.ml src/lib/integer.ml
-
 %install
 # Prevent rebuilds containing the buildroot when installing
 sed -i.orig 's/^headers::/headers:/' Makefile
@@ -194,6 +194,10 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE3}
 # Install the AppData file
 mkdir -p %{buildroot}%{_datadir}/appdata
 install -pm 644 %{SOURCE4} %{buildroot}%{_datadir}/appdata
+
+# Install the icons
+mkdir -p %{buildroot}%{_datadir}/icons
+cp -a icons %{buildroot}%{_datadir}/icons/hicolor
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
@@ -219,6 +223,19 @@ rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 | \
 xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 
+# Remove spurious executable bits on generated files
+chmod 0644 src/lib/dynlink_common_interface.ml src/lib/integer.ml
+
+%post
+update-desktop-database &> /dev/null || :
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
+%postun
+update-desktop-database &> /dev/null || :
+touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+
 %files
 %doc licenses/* VERSION
 %{_bindir}/*
@@ -231,6 +248,7 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/*.desktop
+%{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*
 
 %files doc
@@ -260,6 +278,12 @@ xargs chmod a-x %{buildroot}%{_mandir}/man1/*
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Mar 24 2014 Jerry James <loganjerry@gmail.com> - 1.10-2
+- Fix the icon name in the desktop file
+- Install icons
+- Drop unnecessary gmp-devel BR (pulled in by ocaml-zarith-devel)
+- Fix permissions later, else they get reset to the bad values
+
 * Mon Mar 17 2014 Jerry James <loganjerry@gmail.com> - 1.10-1
 - Update to Neon version
 - All patches have been upstreamed; drop them

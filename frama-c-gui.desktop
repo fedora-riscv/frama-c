@@ -2,7 +2,7 @@
 Name=Frama-C
 GenericName=Frama C
 Exec=frama-c-gui
-Icon=gnome-gmush
+Icon=frama-c
 Terminal=false
 Type=Application
 Categories=Development;
