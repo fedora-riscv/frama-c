@@ -202,7 +202,7 @@ cp -a icons %{buildroot}%{_datadir}/icons/hicolor
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
 cp -p share/acsl.el %{buildroot}%{_xemacs_sitelispdir}
-cd %{buildroot}%{_xemacs_sitelispdir}
+pushd %{buildroot}%{_xemacs_sitelispdir}
 %{_xemacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_xemacs_sitestartdir}
 cp -p %{SOURCE5} %{buildroot}%{_xemacs_sitestartdir}
@@ -215,6 +215,7 @@ cd %{buildroot}%{_emacs_sitelispdir}
 %{_emacs_bytecompile} acsl.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 cp -p %{SOURCE5} %{buildroot}%{_emacs_sitestartdir}
+popd
 
 # Remove files we don't actually want
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
