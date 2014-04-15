@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -64,9 +64,6 @@ Requires:       ltl2ba
 # This can be removed once F-19 goes EOL
 Obsoletes:      %{name}-devel < 1.9-1
 Provides:       %{name}-devel = %{version}-%{release}
-
-# ocaml only available on these:
-ExclusiveArch:  %{ocaml_arches}
 
 # Filter out bogus requires
 %global __requires_exclude ocaml\\\((CfgTypes|GtkSourceView2_types|Ltlast|Mcfg|Memory|Promelaast)\\\)
@@ -279,6 +276,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue Apr 15 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-3
+- Remove ocaml_arches macro (RHBZ#1087794).
+
 * Mon Mar 24 2014 Jerry James <loganjerry@gmail.com> - 1.10-2
 - Fix the icon name in the desktop file
 - Install icons
