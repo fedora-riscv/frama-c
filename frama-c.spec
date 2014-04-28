@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -39,6 +39,8 @@ Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
+# Adapt to ocamlgraph 1.8.5
+Patch0:         %{name}-ocamlgraph.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -142,6 +144,7 @@ support.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
+%patch0
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -279,6 +282,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Apr 21 2014 Jerry James <loganjerry@gmail.com> - 1.10-3
+- Rebuild for ocamlgraph 1.8.5; add -ocamlgraph patch to adapt
+
 * Mon Mar 24 2014 Jerry James <loganjerry@gmail.com> - 1.10-2
 - Fix the icon name in the desktop file
 - Install icons
