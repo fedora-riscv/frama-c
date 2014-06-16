@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -282,6 +282,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue May 13 2014 Jerry James <loganjerry@gmail.com> - 1.10-4
+- Rebuild for coq 8.4pl4
+
 * Mon Apr 21 2014 Jerry James <loganjerry@gmail.com> - 1.10-3
 - Rebuild for ocamlgraph 1.8.5; add -ocamlgraph patch to adapt
 
