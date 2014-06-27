@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Framework for source code analysis of C software
 
 Group:          Development/Libraries
@@ -157,6 +157,9 @@ rm -f ocamlgraph.tar.gz
 # Enable debuginfo
 sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/wp/qed/src/Makefile
 
+# Link with the Fedora LDFLAGS
+sed -i "/OLINKFLAGS/s/-linkall/& -ccopt $RPM_LD_FLAGS/" Makefile
+
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 
@@ -170,9 +173,7 @@ sed -i 's/0\.82/0.83/g' configure src/wp/configure
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
 %configure --enable-verbosemake
-# Harden the build due to network use
-make \
-OLINKFLAGS="-I +zarith -I +ocamlgraph -I +lablgtk2 -ccopt -Wl,-z,relro,-z,now"
+make
 
 %install
 # Prevent rebuilds containing the buildroot when installing
@@ -282,6 +283,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Thu Jun 26 2014 Jerry James <loganjerry@gmail.com> - 1.10-5
+- Set LDFLAGS in a less destructive way (bz 1105265)
+
 * Tue May 13 2014 Jerry James <loganjerry@gmail.com> - 1.10-4
 - Rebuild for coq 8.4pl4
 
