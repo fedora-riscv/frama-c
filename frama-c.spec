@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -279,6 +279,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Fri Jul 25 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-9
+- Rebuild for OCaml 4.02.0 beta.
+
 * Mon Jul 21 2014 Jerry James <loganjerry@gmail.com> - 1.10-8
 - Add comment to desktop file
 
