@@ -44,7 +44,7 @@ Patch0:         %{name}-ocamlgraph.patch
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
-BuildRequires:  emacs-nox xemacs-nox
+BuildRequires:  emacs xemacs-nox
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
@@ -279,6 +279,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Mon Aug  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-11
+- BR emacs instead of emacs-nox, which has gone away
+
 * Fri Aug 01 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-11
 - Bump release and rebuild.
 
