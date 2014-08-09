@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -279,6 +279,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Sat Aug 09 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-12
+- ocaml-4.02.0-0.8.git10e45753.fc22 rebuild.
+
 * Mon Aug  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-11
 - BR emacs instead of emacs-nox, which has gone away
 
