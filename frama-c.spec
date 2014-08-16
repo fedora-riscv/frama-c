@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -279,6 +279,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-13
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Sat Aug 09 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-12
 - ocaml-4.02.0-0.8.git10e45753.fc22 rebuild.
 
