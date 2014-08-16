@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        11%{?dist}
+Release:        12%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -279,6 +279,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-12
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Mon Aug  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-11
 - BR emacs instead of emacs-nox, which has gone away
 
