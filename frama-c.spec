@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        14%{?dist}
+Release:        15%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -238,7 +238,8 @@ touch --no-create %{_datadir}/icons/hicolor &>/dev/null
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%doc licenses/* VERSION
+%doc VERSION
+%license licenses/*
 %{_bindir}/*
 %if %opt
 %exclude %{_bindir}/frama-c.byte
@@ -279,6 +280,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue Sep  2 2014 Jerry James <loganjerry@gmail.com> - 1.10-15
+- Rebuild for final ocaml 4.02.0 release
+- Fix license handling
+
 * Mon Aug 25 2014 Jerry James <loganjerry@gmail.com> - 1.10-14
 - ocaml-4.02.0+rc1 rebuild.
 
