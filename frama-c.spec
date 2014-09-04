@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        12%{?dist}
+Release:        13%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -162,8 +162,8 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Remove spurious executable bits
 find -O3 . -perm /0111 \( -name \*.ml -o -name \*.mli \) | xargs chmod 0644
 
-# Adapt to why3 0.83
-sed -i 's/0\.82/0.83/g' configure src/wp/configure
+# Adapt to why3 0.84
+sed -i 's/0\.82/0.84/g' configure src/wp/configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -238,7 +238,8 @@ touch --no-create %{_datadir}/icons/hicolor &>/dev/null
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
-%doc licenses/* VERSION
+%doc VERSION
+%license licenses/*
 %{_bindir}/*
 %if %opt
 %exclude %{_bindir}/frama-c.byte
@@ -279,6 +280,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Tue Sep  2 2014 Jerry James <loganjerry@gmail.com> - 1.10-13
+- Rebuild for why3 0.84
+- Fix license handling
+
 * Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-12
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 
