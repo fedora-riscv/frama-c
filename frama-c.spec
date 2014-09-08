@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        13%{?dist}
+Release:        16%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -40,6 +40,8 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 Source14:       %{name}-icons.tar.xz
 # Adapt to ocamlgraph 1.8.5
 Patch0:         %{name}-ocamlgraph.patch
+# Adapt to why3 0.84
+Patch1:         %{name}-why3.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -141,6 +143,7 @@ support.
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
 %patch0
+%patch1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -280,12 +283,21 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
-* Tue Sep  2 2014 Jerry James <loganjerry@gmail.com> - 1.10-13
-- Rebuild for why3 0.84
+* Thu Sep  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-16
+- Adapt to why3 0.84
+
+* Tue Sep  2 2014 Jerry James <loganjerry@gmail.com> - 1.10-15
+- Rebuild for final ocaml 4.02.0 release
 - Fix license handling
 
-* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-12
+* Mon Aug 25 2014 Jerry James <loganjerry@gmail.com> - 1.10-14
+- ocaml-4.02.0+rc1 rebuild.
+
+* Sat Aug 16 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.10-13
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
+* Sat Aug 09 2014 Richard W.M. Jones <rjones@redhat.com> - 1.10-12
+- ocaml-4.02.0-0.8.git10e45753.fc22 rebuild.
 
 * Mon Aug  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-11
 - BR emacs instead of emacs-nox, which has gone away
