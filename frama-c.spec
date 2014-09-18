@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.10
-Release:        16%{?dist}
+Release:        17%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -40,7 +40,7 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 Source14:       %{name}-icons.tar.xz
 # Adapt to ocamlgraph 1.8.5
 Patch0:         %{name}-ocamlgraph.patch
-# Adapt to why3 0.84
+# Adapt to why3 0.85
 Patch1:         %{name}-why3.patch
 
 BuildRequires:  alt-ergo
@@ -165,8 +165,8 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Remove spurious executable bits
 find -O3 . -perm /0111 \( -name \*.ml -o -name \*.mli \) | xargs chmod 0644
 
-# Adapt to why3 0.84
-sed -i 's/0\.82/0.84/g' configure src/wp/configure
+# Adapt to why3 0.85
+sed -i 's/0\.82/0.85/g' configure src/wp/configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -283,6 +283,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Thu Sep 18 2014 Jerry James <loganjerry@gmail.com> - 1.10-17
+- Rebuild for why3 0.85
+
 * Thu Sep  4 2014 Jerry James <loganjerry@gmail.com> - 1.10-16
 - Adapt to why3 0.84
 
