@@ -1,0 +1,29 @@
+--- ./cil/src/cil.ml.orig	2015-03-06 08:28:27.000000000 -0700
++++ ./cil/src/cil.ml	2015-03-18 17:45:00.000000000 -0600
+@@ -5933,6 +5933,13 @@ let need_cast ?(force=false) oldt newt =
+    vi.vdescrpure <- descrpure;
+    vi
+ 
++ let makePseudoVar =
++   let counter = ref 0 in
++   function ty ->
++     incr counter;
++     let name = "@" ^ (string_of_int !counter) in
++     makeVarinfo ~temp:true (* global= *)false (* formal= *)false name ty
++
+     (* Set the types of arguments and results as given by the function type
+      * passed as the second argument *)
+  let setFunctionType (f: fundec) (t: typ) =
+--- ./cil/src/cil.mli.orig	2015-03-06 08:28:27.000000000 -0700
++++ ./cil/src/cil.mli	2015-03-18 17:45:00.000000000 -0600
+@@ -707,6 +707,10 @@ val makeLocalVar:
+   fundec -> ?scope:block -> ?temp:bool -> ?insert:bool
+   -> string -> typ -> varinfo
+ 
++(** Make a pseudo-variable to use as placeholder in term to expression
++-    conversions. Its logic field is set. They are always generated. *)
++val makePseudoVar: typ -> varinfo
++
+ (** Make a temporary variable and add it to a function's slocals. The name of
+     the temporary variable will be generated based on the given name hint so
+     that to avoid conflicts with other locals.

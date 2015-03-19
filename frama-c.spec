@@ -12,11 +12,11 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Neon-20140301
+%global pkgversion Sodium-20150201
 
 Name:           frama-c
-Version:        1.10
-Release:        21%{?dist}
+Version:        1.11
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -38,10 +38,8 @@ Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
-# Adapt to ocamlgraph 1.8.5
-Patch0:         %{name}-ocamlgraph.patch
-# Adapt to why3 0.85
-Patch1:         %{name}-why3.patch
+# Add back a Neon function removed in Sodium that why still needs
+Patch0:         %{name}-why.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -64,12 +62,8 @@ Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
 
-# This can be removed once F-19 goes EOL
-Obsoletes:      %{name}-devel < 1.9-1
-Provides:       %{name}-devel = %{version}-%{release}
-
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((CfgTypes|GtkSourceView2_types|Ltlast|Mcfg|Memory|Promelaast)\\\)
+%global __requires_exclude ocaml\\\((CfgTypes|GtkSourceView2_types|Ltlast|Marks|Mcfg|Memory|Promelaast)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -143,7 +137,6 @@ support.
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
 %patch0
-%patch1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -157,7 +150,9 @@ rm -f ocamlgraph.tar.gz
 sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/wp/qed/src/Makefile
 
 # Link with the Fedora LDFLAGS
-sed -i "/OLINKFLAGS/s/-linkall/& -ccopt $RPM_LD_FLAGS/" Makefile
+for flag in $RPM_LD_FLAGS; do
+  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag|" Makefile
+done
 
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
@@ -165,8 +160,8 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Remove spurious executable bits
 find -O3 . -perm /0111 \( -name \*.ml -o -name \*.mli \) | xargs chmod 0644
 
-# Adapt to why3 0.85
-sed -i 's/0\.82/0.85/g' configure src/wp/configure
+# Build buckx with the right flags
+sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -283,6 +278,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Wed Mar 18 2015 Jerry James <loganjerry@gmail.com> - 1.11-1
+- Update to Sodium version
+- Drop all patches; all have been upstreamed
+- Add -why patch to fix the why build
+
 * Wed Feb 18 2015 Richard W.M. Jones <rjones@redhat.com> - 1.10-21
 - ocaml-4.02.1 rebuild.
 

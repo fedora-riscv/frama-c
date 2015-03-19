@@ -23,7 +23,5 @@
   <screenshot>http://frama-c.com/media/first_impact.png</screenshot>
  </screenshots>
  <url type="homepage">http://frama-c.com/</url>
- <!-- FIXME: change this to an upstream email address for spec updates
-         <updatecontact>someone_who_cares@upstream_project.org</updatecontact>
-  -->
+ <updatecontact>frama-c-discuss@lists.gforge.inria.fr</updatecontact>
 </application>
