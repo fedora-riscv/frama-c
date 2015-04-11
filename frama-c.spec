@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.11
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -278,6 +278,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
+* Sat Apr 11 2015 Jerry James <loganjerry@gmail.com> - 1.11-2
+- Rebuild for coq 8.4pl6
+
 * Wed Mar 18 2015 Jerry James <loganjerry@gmail.com> - 1.11-1
 - Update to Sodium version
 - Drop all patches; all have been upstreamed
