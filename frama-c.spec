@@ -283,7 +283,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitelispdir}/acsl.el
 
 %changelog
--* Mon Jun 22 2015 Jerry James <loganjerry@gmail.com> - 1.10-24
+* Mon Jun 22 2015 Jerry James <loganjerry@gmail.com> - 1.10-24
 - Rebuild for why3 0.86.1
 
 * Sat May 16 2015 Jerry James <loganjerry@gmail.com> - 1.10-23
