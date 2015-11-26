@@ -16,7 +16,7 @@
 
 Name:           frama-c
 Version:        1.11
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -92,21 +92,13 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       emacs(bin)
 BuildArch:      noarch
 
+# This can be removed after F-23 reaches EOL.
+Obsoletes:      %{name}-emacs-el < 1.11-9
+Provides:       %{name}-emacs-el = %{version}-%{release}
+
 %description emacs
 This package contains an Emacs support file for working with C source
 files marked up with ACSL.
-
-%package emacs-el
-Summary:        Emacs source file for ACSL markup
-Group:          Development/Languages
-License:        LGPLv2
-Requires:       %{name}-emacs = %{version}-%{release}
-BuildArch:      noarch
-
-%description emacs-el
-This package contains the Emacs source file for working with C source
-files marked up with ACSL.  This package is not needed to use the Emacs
-support.
 
 %package xemacs
 Summary:        XEmacs support file for ACSL markup
@@ -116,21 +108,13 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       xemacs(bin), xemacs-packages-extra
 BuildArch:      noarch
 
+# This can be removed after F-23 reaches EOL.
+Obsoletes:      %{name}-xemacs-el < 1.11-9
+Provides:       %{name}-xemacs-el = %{version}-%{release}
+
 %description xemacs
 This package contains an XEmacs support file for working with C source
 files marked up with ACSL.
-
-%package xemacs-el
-Summary:        XEmacs source file for ACSL markup
-Group:          Development/Languages
-License:        LGPLv2
-Requires:       %{name}-xemacs = %{version}-%{release}
-BuildArch:      noarch
-
-%description xemacs-el
-This package contains the XEmacs source file for working with C source
-files marked up with ACSL.  This package is not needed to use the XEmacs
-support.
 
 %prep
 %setup -q -n %{name}-%{pkgversion}
@@ -264,20 +248,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc frama-c-api
 
 %files emacs
-%{_emacs_sitelispdir}/acsl.elc
+%{_emacs_sitelispdir}/acsl.el*
 %{_emacs_sitestartdir}/acsl.el
 
-%files emacs-el
-%{_emacs_sitelispdir}/acsl.el
-
 %files xemacs
-%{_xemacs_sitelispdir}/acsl.elc
+%{_xemacs_sitelispdir}/acsl.el*
 %{_xemacs_sitestartdir}/acsl.el
 
-%files xemacs-el
-%{_xemacs_sitelispdir}/acsl.el
-
 %changelog
+* Wed Nov 25 2015 Jerry James <loganjerry@gmail.com> - 1.11-9
+- Rebuild for ocaml-zarith 1.4.1
+
 * Thu Jul 30 2015 Richard W.M. Jones <rjones@redhat.com> - 1.11-8
 - OCaml 4.02.3 rebuild.
 

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application>
- <id type="desktop">frama-c-gui.desktop</id>
- <licence>CC0</licence>
+<component type="desktop">
+ <id>frama-c-gui.desktop</id>
+ <metadata_license>CC0-1.0</metadata_license>
+ <project_license>GPL-2.0+</project_license>
+ <name>frama-c</name>
+ <summary>Framework for source code analysis of C software</summary>
  <description>
   <p>
    Frama-C is a suite of tools dedicated to the analysis of the source code of
@@ -16,12 +19,28 @@
   </p>
  </description>
  <screenshots>
-  <screenshot type="default">http://frama-c.com/media/first.png</screenshot>
-  <screenshot>http://frama-c.com/media/first_S.png</screenshot>
-  <screenshot>http://frama-c.com/media/first_effect.png</screenshot>
-  <screenshot>http://frama-c.com/media/first_defs.png</screenshot>
-  <screenshot>http://frama-c.com/media/first_impact.png</screenshot>
+  <screenshot type="default">
+   <image>http://frama-c.com/media/first.png</image>
+   <caption>Analysis of first.c</caption>
+  </screenshot>
+  <screenshot>
+   <image>http://frama-c.com/media/first_S.png</image>
+   <caption>Informational messages for first.c</caption>
+  </screenshot>
+  <screenshot>
+   <image>http://frama-c.com/media/first_effect.png</image>
+   <caption>Effect of a modification statement</caption>
+  </screenshot>
+  <screenshot>
+   <image>http://frama-c.com/media/first_defs.png</image>
+   <caption>Show definitions</caption>
+  </screenshot>
+  <screenshot>
+   <image>http://frama-c.com/media/first_impact.png</image>
+   <caption>Impact analysis</caption>
+  </screenshot>
  </screenshots>
- <url type="homepage">http://frama-c.com/</url>
  <updatecontact>frama-c-discuss@lists.gforge.inria.fr</updatecontact>
-</application>
+ <url type="homepage">http://frama-c.com/</url>
+ <url type="bugtracker">https://bts.frama-c.com/</url>
+</component>
