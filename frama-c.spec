@@ -1,22 +1,17 @@
-# Some ideas for this spec file taken from a prior attempt by Richard
-# W. M. Jones
-
-#  General Information
-# This program has its own version of cil, there is an ocaml-cil upon which this
-# based, however the version contained in this package has custom mods that
-# are not availible with the ocaml-cil because the upstream has
-# forked their own version of cil.
+# Frama-C contains a forked version of ocaml-cil.  We cannot use the Fedora
+# ocaml-cil package as a replacement, because Frama-C upstream has modified
+# their version in incompatible ways.
 
 %global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
 %if ! %opt
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Sodium-20150201
+%global pkgversion Magnesium-20151002
 
 Name:           frama-c
-Version:        1.11
-Release:        10%{?dist}
+Version:        1.12
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -38,8 +33,6 @@ Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
-# Add back a Neon function removed in Sodium that why still needs
-Patch0:         %{name}-why.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -50,20 +43,25 @@ BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  ltl2ba
 BuildRequires:  ocaml
-BuildRequires:  ocaml-findlib
+BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
 BuildRequires:  ocaml-zarith-devel
 BuildRequires:  why3
+BuildRequires:  z3
 
 Requires:       cpp
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
 
+Suggests:       alt-ergo
+Suggests:       coq
+Suggests:       z3
+
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((CfgTypes|GtkSourceView2_types|Ltlast|Marks|Mcfg|Memory|Promelaast)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|GtkSourceView2_types|Marks|Services|Sig|Uses)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -120,7 +118,6 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
-%patch0
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -131,7 +128,7 @@ cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
 rm -f ocamlgraph.tar.gz
 
 # Enable debuginfo
-sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/wp/qed/src/Makefile
+sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/plugins/wp/qed/src/Makefile
 
 # Link with the Fedora LDFLAGS
 for flag in $RPM_LD_FLAGS; do
@@ -140,9 +137,6 @@ done
 
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
-
-# Remove spurious executable bits
-find -O3 . -perm /0111 \( -name \*.ml -o -name \*.mli \) | xargs chmod 0644
 
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
@@ -157,8 +151,8 @@ make
 # Prevent rebuilds containing the buildroot when installing
 sed -i.orig 's/^headers::/headers:/' Makefile
 touch -r Makefile.orig Makefile
-sed -i.orig '/^headers::/,/^$/d' src/aorai/Makefile
-touch -r src/aorai/Makefile.orig src/aorai/Makefile
+sed -i.orig '/^headers::/,/^$/d' src/plugins/aorai/Makefile
+touch -r src/plugins/aorai/Makefile.orig src/plugins/aorai/Makefile
 
 make install DESTDIR=%{buildroot}
 
@@ -203,11 +197,15 @@ popd
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
 
 # The install step adds lots of spurious executable bits
-find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 | \
-xargs chmod a-x %{buildroot}%{_mandir}/man1/*
+chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmi \
+          %{buildroot}%{_libdir}/frama-c/plugins/META* \
+          %{buildroot}%{_libdir}/frama-c/plugins/*.cm{a,i,o,x,xa} \
+          %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{a,i,o} \
+          %{buildroot}%{_mandir}/man1/*
+find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 
 # Remove spurious executable bits on generated files
-chmod 0644 src/lib/dynlink_common_interface.ml src/lib/integer.ml
+chmod 0644 src/libraries/stdlib/integer.ml
 
 %post
 update-desktop-database &> /dev/null || :
@@ -226,17 +224,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %if %opt
 %exclude %{_bindir}/frama-c.byte
 %exclude %{_bindir}/frama-c-gui.byte
-%exclude %{_bindir}/ptests.byte
 %endif
 %{_libdir}/frama-c/
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
-%{_datadir}/applications/*.desktop
+%{_datadir}/applications/%{name}-gui.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
+%doc doc/code/print_api
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
 %doc doc/manuals/metrics-manual-%{pkgversion}.pdf
@@ -256,6 +254,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Feb 12 2016 Jerry James <loganjerry@gmail.com> - 1.12-1
+- Update to Magnesium version
+- Drop unneeded -why patch
+
 * Wed Feb 03 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.11-10
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
