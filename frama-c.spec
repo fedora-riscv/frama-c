@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.12
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -254,6 +254,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Mar 18 2016 Jerry James <loganjerry@gmail.com> - 1.12-2
+- Rebuild for why3 0.87.0
+
 * Fri Feb 12 2016 Jerry James <loganjerry@gmail.com> - 1.12-1
 - Update to Magnesium version
 - Drop unneeded -why patch
