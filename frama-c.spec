@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.12
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -75,7 +75,6 @@ sophisticated tools, such as a slicer and dependency analysis.
 
 %package doc
 Summary:        Large documentation files for %{name}
-Group:          Documentation 
 Requires:       %{name} = %{version}-%{release}
 BuildArch:      noarch
 
@@ -84,7 +83,6 @@ Large documentation files for %{name}.
 
 %package emacs
 Summary:        Emacs support file for ACSL markup
-Group:          Development/Languages
 License:        LGPLv2
 Requires:       %{name} = %{version}-%{release}
 Requires:       emacs(bin)
@@ -100,7 +98,6 @@ files marked up with ACSL.
 
 %package xemacs
 Summary:        XEmacs support file for ACSL markup
-Group:          Development/Languages
 License:        LGPLv2
 Requires:       %{name} = %{version}-%{release}
 Requires:       xemacs(bin), xemacs-packages-extra
@@ -254,6 +251,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Apr 16 2016 Jerry James <loganjerry@gmail.com> - 1.12-3
+- Rebuild for ocaml-ocamlgraph 1.8.7
+
 * Fri Mar 18 2016 Jerry James <loganjerry@gmail.com> - 1.12-2
 - Rebuild for why3 0.87.0
 
