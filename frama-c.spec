@@ -7,11 +7,11 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Magnesium-20151002
+%global pkgversion Aluminium-20160501
 
 Name:           frama-c
-Version:        1.12
-Release:        4%{?dist}
+Version:        1.13
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -196,13 +196,14 @@ rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
 # The install step adds lots of spurious executable bits
 chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmi \
           %{buildroot}%{_libdir}/frama-c/plugins/META* \
-          %{buildroot}%{_libdir}/frama-c/plugins/*.cm{a,i,o,x,xa} \
+          %{buildroot}%{_libdir}/frama-c/plugins/*.cmi \
           %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{a,i,o} \
+          %{buildroot}%{_libdir}/frama-c/plugins/top/*.cm{a,o,x,xa} \
           %{buildroot}%{_mandir}/man1/*
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 
 # Remove spurious executable bits on generated files
-chmod 0644 src/libraries/stdlib/integer.ml
+chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 
 %post
 update-desktop-database &> /dev/null || :
@@ -231,7 +232,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
-%doc doc/code/print_api
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
 %doc doc/manuals/metrics-manual-%{pkgversion}.pdf
@@ -251,6 +251,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jun  1 2016 Jerry James <loganjerry@gmail.com> - 1.13-1
+- Update to Aluminium version
+
 * Fri Apr 22 2016 Jerry James <loganjerry@gmail.com> - 1.12-4
 - Rebuild for coq 8.5pl1
 
