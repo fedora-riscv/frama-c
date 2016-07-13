@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.13
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -55,6 +55,7 @@ Requires:       cpp
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
+Requires:       ocaml-findlib
 
 Suggests:       alt-ergo
 Suggests:       coq
@@ -251,6 +252,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jul 13 2016 Jerry James <loganjerry@gmail.com> - 1.13-2
+- Rebuild for coq 8.5pl2
+- Require ocaml-findlib (bz 1354515)
+
 * Wed Jun  1 2016 Jerry James <loganjerry@gmail.com> - 1.13-1
 - Update to Aluminium version
 
