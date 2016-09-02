@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.13
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -43,6 +43,7 @@ BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  ltl2ba
 BuildRequires:  ocaml
+BuildRequires:  ocaml-apron-devel
 BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
@@ -51,7 +52,7 @@ BuildRequires:  ocaml-zarith-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
-Requires:       cpp
+Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
@@ -138,6 +139,9 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
+
+# Fix detection of why3
+sed -i '/why3/s/\*\\) \.\*/*\\).*/' configure src/plugins/wp/configure
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -252,6 +256,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Sep  1 2016 Jerry James <loganjerry@gmail.com> - 1.13-3
+- Rebuild for why3 0.87.2
+
 * Wed Jul 13 2016 Jerry James <loganjerry@gmail.com> - 1.13-2
 - Rebuild for coq 8.5pl2
 - Require ocaml-findlib (bz 1354515)
