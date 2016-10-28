@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.13
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -211,12 +211,10 @@ find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 
 %post
-update-desktop-database &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
-update-desktop-database &> /dev/null || :
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
@@ -256,6 +254,10 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Oct 28 2016 Jerry James <loganjerry@gmail.com> - 1.13-4
+- Rebuild for coq 8.5pl3
+- Remove obsolete scriptlets
+
 * Thu Sep  1 2016 Jerry James <loganjerry@gmail.com> - 1.13-3
 - Rebuild for why3 0.87.2
 
