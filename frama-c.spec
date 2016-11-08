@@ -34,6 +34,9 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
 
+# Small fixes for OCaml 4.04.0.
+Patch1:         frama-c-ocaml-4-04.patch
+
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
@@ -117,6 +120,8 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
+
+%patch1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -256,6 +261,7 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %changelog
 * Mon Nov 07 2016 Richard W.M. Jones <rjones@redhat.com> - 1.13-5
 - Rebuild for OCaml 4.04.0.
+- Add small fixes for OCaml 4.04.0.
 
 * Fri Oct 28 2016 Jerry James <loganjerry@gmail.com> - 1.13-4
 - Rebuild for coq 8.5pl3
