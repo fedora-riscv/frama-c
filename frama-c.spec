@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        1.13
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -40,7 +40,7 @@ Patch1:         frama-c-ocaml-4-04.patch
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
-BuildRequires:  emacs xemacs-nox
+BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
@@ -259,6 +259,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jan 12 2017 Jerry James <loganjerry@gmail.com> - 1.13-7
+- Rebuild for coq 8.6
+
 * Wed Nov 30 2016 Jerry James <loganjerry@gmail.com> - 1.13-6
 - Rebuild for alt-ergo 1.30
 
