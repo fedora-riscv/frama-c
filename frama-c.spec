@@ -7,11 +7,11 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Aluminium-20160501
+%global pkgversion Silicon-20161101
 
 Name:           frama-c
-Version:        1.13
-Release:        8%{?dist}
+Version:        1.14
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -33,9 +33,6 @@ Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
-
-# Small fixes for OCaml 4.04.0.
-Patch1:         frama-c-ocaml-4-04.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -93,10 +90,6 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       emacs(bin)
 BuildArch:      noarch
 
-# This can be removed after F-23 reaches EOL.
-Obsoletes:      %{name}-emacs-el < 1.11-9
-Provides:       %{name}-emacs-el = %{version}-%{release}
-
 %description emacs
 This package contains an Emacs support file for working with C source
 files marked up with ACSL.
@@ -108,10 +101,6 @@ Requires:       %{name} = %{version}-%{release}
 Requires:       xemacs(bin), xemacs-packages-extra
 BuildArch:      noarch
 
-# This can be removed after F-23 reaches EOL.
-Obsoletes:      %{name}-xemacs-el < 1.11-9
-Provides:       %{name}-xemacs-el = %{version}-%{release}
-
 %description xemacs
 This package contains an XEmacs support file for working with C source
 files marked up with ACSL.
@@ -120,8 +109,6 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
-
-%patch1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -184,18 +171,19 @@ cp -a icons %{buildroot}%{_datadir}/icons/hicolor
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
-cp -p share/acsl.el %{buildroot}%{_xemacs_sitelispdir}
+cp -p share/emacs/*.el %{buildroot}%{_xemacs_sitelispdir}
 pushd %{buildroot}%{_xemacs_sitelispdir}
-%{_xemacs_bytecompile} acsl.el
+%{_xemacs_bytecompile} *.el
 mkdir -p %{buildroot}%{_xemacs_sitestartdir}
 cp -p %{SOURCE5} %{buildroot}%{_xemacs_sitestartdir}
 
 # Install and bytecompile the Emacs file
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
-mv %{buildroot}%{_datadir}/frama-c/acsl.el %{buildroot}%{_emacs_sitelispdir}
-chmod a-x %{buildroot}%{_emacs_sitelispdir}/acsl.el
+mv %{buildroot}%{_datadir}/frama-c/emacs/*.el %{buildroot}%{_emacs_sitelispdir}
+rmdir %{buildroot}%{_datadir}/frama-c/emacs
+chmod a-x %{buildroot}%{_emacs_sitelispdir}/*.el
 cd %{buildroot}%{_emacs_sitelispdir}
-%{_emacs_bytecompile} acsl.el
+%{_emacs_bytecompile} *.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 cp -p %{SOURCE5} %{buildroot}%{_emacs_sitestartdir}
 popd
@@ -251,14 +239,17 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %doc frama-c-api
 
 %files emacs
-%{_emacs_sitelispdir}/acsl.el*
+%{_emacs_sitelispdir}/*.el*
 %{_emacs_sitestartdir}/acsl.el
 
 %files xemacs
-%{_xemacs_sitelispdir}/acsl.el*
+%{_xemacs_sitelispdir}/*.el*
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Mar 24 2017 Jerry James <loganjerry@gmail.com> - 1.14-1
+- Update to Silicon version
+
 * Fri Feb 10 2017 Fedora Release Engineering <releng@fedoraproject.org> - 1.13-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_26_Mass_Rebuild
 
