@@ -34,6 +34,11 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source14:       %{name}-icons.tar.xz
 
+# Misc fixes to get Silicon to build with OCaml 4.05.0.
+# Most likely this patch can be dropped when moving to next
+# upstream version.
+Patch1:         frama-c-Silicon-20161101-ocaml-4.05.0-fixes.patch
+
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
@@ -109,6 +114,8 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 14 -n %{name}-%{pkgversion}
+
+%patch1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
