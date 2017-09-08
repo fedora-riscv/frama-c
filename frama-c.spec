@@ -7,11 +7,11 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Silicon-20161101
+%global pkgversion Phosphorus-20170501
 
 Name:           frama-c
-Version:        1.14
-Release:        6%{?dist}
+Version:        15.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -31,13 +31,9 @@ Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
 Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
+Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
-Source14:       %{name}-icons.tar.xz
-
-# Misc fixes to get Silicon to build with OCaml 4.05.0.
-# Most likely this patch can be dropped when moving to next
-# upstream version.
-Patch1:         frama-c-Silicon-20161101-ocaml-4.05.0-fixes.patch
+Source15:       %{name}-icons.tar.xz
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -57,6 +53,7 @@ BuildRequires:  ocaml-zarith-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
+Requires:       bash-completion
 Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
@@ -113,14 +110,12 @@ files marked up with ACSL.
 %prep
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
-%setup -q -T -D -a 14 -n %{name}-%{pkgversion}
-
-%patch1 -p1
+%setup -q -T -D -a 15 -n %{name}-%{pkgversion}
 
 # Copy in the manuals
 mkdir doc/manuals
 cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
-   %{SOURCE12} %{SOURCE13} doc/manuals
+   %{SOURCE12} %{SOURCE13} %{SOURCE14} doc/manuals
 
 # Do not use the bundled version of ocamlgraph
 rm -f ocamlgraph.tar.gz
@@ -149,12 +144,6 @@ sed -i '/why3/s/\*\\) \.\*/*\\).*/' configure src/plugins/wp/configure
 make
 
 %install
-# Prevent rebuilds containing the buildroot when installing
-sed -i.orig 's/^headers::/headers:/' Makefile
-touch -r Makefile.orig Makefile
-sed -i.orig '/^headers::/,/^$/d' src/plugins/aorai/Makefile
-touch -r src/plugins/aorai/Makefile.orig src/plugins/aorai/Makefile
-
 make install DESTDIR=%{buildroot}
 
 %if %opt
@@ -175,6 +164,11 @@ install -pm 644 %{SOURCE4} %{buildroot}%{_datadir}/appdata
 # Install the icons
 mkdir -p %{buildroot}%{_datadir}/icons
 cp -a icons %{buildroot}%{_datadir}/icons/hicolor
+
+# Install the bash completion file
+mkdir -p %{buildroot}%{_sysconfdir}/bash_completion.d
+cp -p share/autocomplete_frama-c \
+   %{buildroot}%{_sysconfdir}/bash_completion.d/frama-c
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
@@ -227,16 +221,20 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %exclude %{_bindir}/frama-c-gui.byte
 %endif
 %{_libdir}/frama-c/
+%{_libdir}/libeacsl-gmp.a
+%{_libdir}/libeacsl-jemalloc.a
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/%{name}-gui.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*
+%{_sysconfdir}/bash_completion.d/frama-c
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
+%doc doc/manuals/e-acsl-manual_%{pkgversion}.pdf
 %doc doc/manuals/metrics-manual-%{pkgversion}.pdf
 %doc doc/manuals/plugin-development-guide-%{pkgversion}.pdf
 %doc doc/manuals/rte-manual-%{pkgversion}.pdf
@@ -254,6 +252,11 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Sep  7 2017 Jerry James <loganjerry@gmail.com> - 15.0-1
+- Update to Phosphorus version
+- Switch to new upstream version numbering scheme
+- Install the bash completion file
+
 * Wed Sep 06 2017 Richard W.M. Jones <rjones@redhat.com> - 1.14-6
 - OCaml 4.05.0 rebuild.
 
