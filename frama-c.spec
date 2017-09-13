@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        15.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -65,7 +65,7 @@ Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|GtkSourceView2_types|Marks|Services|Sig|Uses)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|Mcfg|Memory|Model|Mstate|Passive|Separation|Services|Sig|Uses|Vset|Warning|WpPropId)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -252,6 +252,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Sep 12 2017 Jerry James <loganjerry@gmail.com> - 15.0-2
+- More excludes so that provides match requires
+
 * Thu Sep  7 2017 Jerry James <loganjerry@gmail.com> - 15.0-1
 - Update to Phosphorus version
 - Switch to new upstream version numbering scheme
