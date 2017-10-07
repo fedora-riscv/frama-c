@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        15.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -42,6 +42,7 @@ BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
+BuildRequires:  libtool
 BuildRequires:  ltl2ba
 BuildRequires:  ocaml
 BuildRequires:  ocaml-apron-devel
@@ -252,6 +253,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Oct  7 2017 Jerry James <loganjerry@gmail.com> - 15.0-3
+- Rebuild for why3 0.88.0
+
 * Tue Sep 12 2017 Jerry James <loganjerry@gmail.com> - 15.0-2
 - More excludes so that provides match requires
 
