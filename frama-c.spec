@@ -53,6 +53,7 @@ BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
+BuildRequires:  ocaml-num-devel
 BuildRequires:  ocaml-zarith-devel
 BuildRequires:  why3
 BuildRequires:  z3
