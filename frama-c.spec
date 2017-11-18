@@ -35,6 +35,9 @@ Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{pkgversion}.p
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
 
+# Patch to fix -safe-string in OCaml 4.06.
+Patch1:         frama-c-15-safe-string.patch
+
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
@@ -112,6 +115,7 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 15 -n %{name}-%{pkgversion}
+%patch1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -126,7 +130,7 @@ sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/plugins/wp/qed/src/Makefile
 
 # Link with the Fedora LDFLAGS
 for flag in $RPM_LD_FLAGS; do
-  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag|" Makefile
+  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag -runtime-variant _pic|" Makefile
 done
 
 # Preserve timestamps when installing
