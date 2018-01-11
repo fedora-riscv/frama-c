@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        15.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -210,14 +210,6 @@ find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 # Remove spurious executable bits on generated files
 chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 
-%post
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-
-%postun
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-
 %files
 %doc VERSION
 %license licenses/*
@@ -258,6 +250,9 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jan 11 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 15.0-7
+- Remove obsolete scriptlets
+
 * Sat Dec  9 2017 Jerry James <loganjerry@gmail.com> - 15.0-6
 - Rebuild for why3 0.88.2
 
