@@ -11,7 +11,7 @@
 
 Name:           frama-c
 Version:        15.0
-Release:        7%{?dist}
+Release:        8%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -250,6 +250,9 @@ chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 15.0-8
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
+
 * Thu Jan 11 2018 Igor Gnatenko <ignatenkobrain@fedoraproject.org> - 15.0-7
 - Remove obsolete scriptlets
 
