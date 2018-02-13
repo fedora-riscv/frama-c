@@ -2,16 +2,15 @@
 # ocaml-cil package as a replacement, because Frama-C upstream has modified
 # their version in incompatible ways.
 
-%global opt %(test -x %{_bindir}/ocamlopt && echo 1 || echo 0)
-%if ! %opt
+%ifnarch %{ocaml_native_compiler}
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Phosphorus-20170501
+%global pkgversion Sulfur-20171101
 
 Name:           frama-c
-Version:        15.0
-Release:        8%{?dist}
+Version:        16.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -34,9 +33,6 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
-
-# Patch to fix -safe-string in OCaml 4.06.
-Patch1:         frama-c-15-safe-string.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -116,15 +112,11 @@ files marked up with ACSL.
 %setup -q -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 15 -n %{name}-%{pkgversion}
-%patch1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
 cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
    %{SOURCE12} %{SOURCE13} %{SOURCE14} doc/manuals
-
-# Do not use the bundled version of ocamlgraph
-rm -f ocamlgraph.tar.gz
 
 # Enable debuginfo
 sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/plugins/wp/qed/src/Makefile
@@ -140,9 +132,6 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
-# Fix detection of why3
-sed -i '/why3/s/\*\\) \.\*/*\\).*/' configure src/plugins/wp/configure
-
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
@@ -152,7 +141,7 @@ make
 %install
 make install DESTDIR=%{buildroot}
 
-%if %opt
+%ifarch %{ocaml_native_compiler}
 mv -f %{buildroot}%{_bindir}/ptests.opt %{buildroot}%{_bindir}/ptests
 %else
 mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
@@ -210,17 +199,20 @@ find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 # Remove spurious executable bits on generated files
 chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 
+# Add a missing executable bit
+chmod 0755 %{buildroot}%{_bindir}/*.sh
+
 %files
 %doc VERSION
 %license licenses/*
 %{_bindir}/*
-%if %opt
+%ifarch %{ocaml_native_compiler}
 %exclude %{_bindir}/frama-c.byte
 %exclude %{_bindir}/frama-c-gui.byte
 %endif
 %{_libdir}/frama-c/
+%{_libdir}/libeacsl-dlmalloc.a
 %{_libdir}/libeacsl-gmp.a
-%{_libdir}/libeacsl-jemalloc.a
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/%{name}-gui.desktop
@@ -250,6 +242,10 @@ chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Feb 12 2018 Jerry James <loganjerry@gmail.com> - 16.0-1
+- Update to Sulfur version
+- Drop upstreamed -safe-string patch
+
 * Wed Feb 07 2018 Fedora Release Engineering <releng@fedoraproject.org> - 15.0-8
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_28_Mass_Rebuild
 
