@@ -10,7 +10,7 @@
 
 Name:           frama-c
 Version:        16.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
@@ -242,6 +242,9 @@ chmod 0755 %{buildroot}%{_bindir}/*.sh
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 16.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
+
 * Mon Feb 12 2018 Jerry James <loganjerry@gmail.com> - 16.0-1
 - Update to Sulfur version
 - Drop upstreamed -safe-string patch
