@@ -6,37 +6,39 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Sulfur-20171101
+%global pkgversion Chlorine-20180502
+%global docversion Chlorine-20180501
 
 Name:           frama-c
-Version:        16.0
-Release:        2%{?dist}
+Version:        17.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
 URL:            http://frama-c.com/
 Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
-Source1:        http://frama-c.com/download/%{name}-%{pkgversion}_api.tar.gz
+Source1:        http://frama-c.com/download/%{name}-%{docversion}_api.tar.gz
 Source2:        frama-c-1.6.licensing
 Source3:        %{name}-gui.desktop
 Source4:        %{name}-gui.appdata.xml
 Source5:        acsl.el
-Source6:        http://frama-c.com/download/user-manual-%{pkgversion}.pdf
-Source7:        http://frama-c.com/download/plugin-development-guide-%{pkgversion}.pdf
-Source8:        http://frama-c.com/download/acsl-implementation-%{pkgversion}.pdf
-Source9:        http://frama-c.com/download/aorai-manual-%{pkgversion}.pdf
-Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
-Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
-Source12:       http://frama-c.com/download/value-analysis-%{pkgversion}.pdf
-Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
-Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{pkgversion}.pdf
+Source6:        http://frama-c.com/download/user-manual-%{docversion}.pdf
+Source7:        http://frama-c.com/download/plugin-development-guide-%{docversion}.pdf
+Source8:        http://frama-c.com/download/acsl-implementation-%{docversion}.pdf
+Source9:        http://frama-c.com/download/aorai-manual-%{docversion}.pdf
+Source10:       http://frama-c.com/download/metrics-manual-%{docversion}.pdf
+Source11:       http://frama-c.com/download/rte-manual-%{docversion}.pdf
+Source12:       http://frama-c.com/download/value-analysis-%{docversion}.pdf
+Source13:       http://frama-c.com/download/wp-manual-%{docversion}.pdf
+Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{docversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
+BuildRequires:  doxygen
 BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  graphviz
 BuildRequires:  gtksourceview2-devel
@@ -45,11 +47,14 @@ BuildRequires:  libtool
 BuildRequires:  ltl2ba
 BuildRequires:  ocaml
 BuildRequires:  ocaml-apron-devel
+BuildRequires:  ocaml-biniou-devel
+BuildRequires:  ocaml-easy-format-devel
 BuildRequires:  ocaml-findlib-devel
 BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
 BuildRequires:  ocaml-num-devel
+BuildRequires:  ocaml-yojson-devel
 BuildRequires:  ocaml-zarith-devel
 BuildRequires:  why3
 BuildRequires:  z3
@@ -60,13 +65,14 @@ Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
 Requires:       ocaml-findlib
+Requires:       ocaml-yojson
 
 Suggests:       alt-ergo
 Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|Mcfg|Memory|Model|Mstate|Passive|Separation|Services|Sig|Uses|Vset|Warning|WpPropId)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|Model|Mstate|Passive|Separation|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -118,12 +124,10 @@ mkdir doc/manuals
 cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
    %{SOURCE12} %{SOURCE13} %{SOURCE14} doc/manuals
 
-# Enable debuginfo
-sed -i 's/ -pack/ -g&/;s/^OPT.*=/& -g/' src/plugins/wp/qed/src/Makefile
-
 # Link with the Fedora LDFLAGS
+sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic|" Makefile
 for flag in $RPM_LD_FLAGS; do
-  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag -runtime-variant _pic|" Makefile
+  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag|" Makefile
 done
 
 # Preserve timestamps when installing
@@ -188,19 +192,17 @@ popd
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
 
 # The install step adds lots of spurious executable bits
-chmod a-x %{buildroot}%{_libdir}/frama-c/*.cmi \
+chmod a-x %{buildroot}%{_libdir}/*.a \
+          %{buildroot}%{_libdir}/frama-c/*.cmi \
           %{buildroot}%{_libdir}/frama-c/plugins/META* \
           %{buildroot}%{_libdir}/frama-c/plugins/*.cmi \
-          %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{a,i,o} \
-          %{buildroot}%{_libdir}/frama-c/plugins/top/*.cm{a,o,x,xa} \
+          %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{i,o} \
+          %{buildroot}%{_libdir}/frama-c/plugins/top/*.cm{o,x} \
           %{buildroot}%{_mandir}/man1/*
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 
 # Remove spurious executable bits on generated files
-chmod 0644 src/libraries/stdlib/integer.ml src/plugins/value/domains/apron/*.ml
-
-# Add a missing executable bit
-chmod 0755 %{buildroot}%{_bindir}/*.sh
+chmod 0644 src/plugins/value/domains/apron/*.ml
 
 %files
 %doc VERSION
@@ -222,15 +224,15 @@ chmod 0755 %{buildroot}%{_bindir}/*.sh
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
-%doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
-%doc doc/manuals/aorai-manual-%{pkgversion}.pdf
-%doc doc/manuals/e-acsl-manual_%{pkgversion}.pdf
-%doc doc/manuals/metrics-manual-%{pkgversion}.pdf
-%doc doc/manuals/plugin-development-guide-%{pkgversion}.pdf
-%doc doc/manuals/rte-manual-%{pkgversion}.pdf
-%doc doc/manuals/user-manual-%{pkgversion}.pdf
-%doc doc/manuals/value-analysis-%{pkgversion}.pdf
-%doc doc/manuals/wp-manual-%{pkgversion}.pdf
+%doc doc/manuals/acsl-implementation-%{docversion}.pdf
+%doc doc/manuals/aorai-manual-%{docversion}.pdf
+%doc doc/manuals/e-acsl-manual_%{docversion}.pdf
+%doc doc/manuals/metrics-manual-%{docversion}.pdf
+%doc doc/manuals/plugin-development-guide-%{docversion}.pdf
+%doc doc/manuals/rte-manual-%{docversion}.pdf
+%doc doc/manuals/user-manual-%{docversion}.pdf
+%doc doc/manuals/value-analysis-%{docversion}.pdf
+%doc doc/manuals/wp-manual-%{docversion}.pdf
 %doc frama-c-api
 
 %files emacs
@@ -242,6 +244,9 @@ chmod 0755 %{buildroot}%{_bindir}/*.sh
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Jan 26 2018 Jerry James <loganjerry@gmail.com> - 17.0-1
+- Update to Chlorine version
+
 * Fri Jul 13 2018 Fedora Release Engineering <releng@fedoraproject.org> - 16.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_29_Mass_Rebuild
 
