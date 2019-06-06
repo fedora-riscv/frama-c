@@ -6,32 +6,31 @@
 %global debug_package %{nil}
 %endif
 
-%global pkgversion Chlorine-20180502
-%global docversion Chlorine-20180501
-
 Name:           frama-c
-Version:        17.0
-Release:        2%{?dist}
+Version:        18.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
+
+%global pkgversion %{version}-Argon
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
 URL:            http://frama-c.com/
 Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
-Source1:        http://frama-c.com/download/%{name}-%{docversion}_api.tar.gz
+Source1:        http://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
 Source2:        frama-c-1.6.licensing
 Source3:        %{name}-gui.desktop
 Source4:        %{name}-gui.appdata.xml
 Source5:        acsl.el
-Source6:        http://frama-c.com/download/user-manual-%{docversion}.pdf
-Source7:        http://frama-c.com/download/plugin-development-guide-%{docversion}.pdf
-Source8:        http://frama-c.com/download/acsl-implementation-%{docversion}.pdf
-Source9:        http://frama-c.com/download/aorai-manual-%{docversion}.pdf
-Source10:       http://frama-c.com/download/metrics-manual-%{docversion}.pdf
-Source11:       http://frama-c.com/download/rte-manual-%{docversion}.pdf
-Source12:       http://frama-c.com/download/value-analysis-%{docversion}.pdf
-Source13:       http://frama-c.com/download/wp-manual-%{docversion}.pdf
-Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual_%{docversion}.pdf
+Source6:        http://frama-c.com/download/user-manual-%{pkgversion}.pdf
+Source7:        http://frama-c.com/download/plugin-development-guide-%{pkgversion}.pdf
+Source8:        http://frama-c.com/download/acsl-implementation-%{pkgversion}.pdf
+Source9:        http://frama-c.com/download/aorai-manual-%{pkgversion}.pdf
+Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
+Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
+Source12:       http://frama-c.com/download/eva-manual-%{pkgversion}.pdf
+Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
+Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
 
@@ -56,6 +55,7 @@ BuildRequires:  ocaml-ocamlgraph-devel
 BuildRequires:  ocaml-num-devel
 BuildRequires:  ocaml-yojson-devel
 BuildRequires:  ocaml-zarith-devel
+BuildRequires:  python3-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
@@ -72,7 +72,7 @@ Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|Model|Mstate|Passive|Separation|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|MemoryContext|Model|Mstate|Passive|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -136,6 +136,13 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
+# Do not use env
+for fil in share/analysis-scripts/list_files.py; do
+  sed -i.orig 's,%{_bindir}/env python,%{_bindir}/python3,' $fil
+  touch -r $fil.orig $fil
+  rm $fil.orig
+done
+
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
@@ -190,6 +197,9 @@ popd
 
 # Remove files we don't actually want
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
+%ifarch %{ocaml_native_compiler}
+rm -f %{buildroot}%{_bindir}/frama-c{,-gui}.byte
+%endif
 
 # The install step adds lots of spurious executable bits
 chmod a-x %{buildroot}%{_libdir}/*.a \
@@ -201,6 +211,9 @@ chmod a-x %{buildroot}%{_libdir}/*.a \
           %{buildroot}%{_mandir}/man1/*
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 
+# But put back the correct executable bits
+chmod 0755 %{buildroot}%{_datadir}/frama-c/analysis-scripts/*.{pl,py,sh}
+
 # Remove spurious executable bits on generated files
 chmod 0644 src/plugins/value/domains/apron/*.ml
 
@@ -208,10 +221,6 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %doc VERSION
 %license licenses/*
 %{_bindir}/*
-%ifarch %{ocaml_native_compiler}
-%exclude %{_bindir}/frama-c.byte
-%exclude %{_bindir}/frama-c-gui.byte
-%endif
 %{_libdir}/frama-c/
 %{_libdir}/libeacsl-dlmalloc.a
 %{_libdir}/libeacsl-gmp.a
@@ -220,19 +229,19 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_datadir}/applications/%{name}-gui.desktop
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*
-%{_sysconfdir}/bash_completion.d/frama-c
+%config(noreplace) %{_sysconfdir}/bash_completion.d/frama-c
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
-%doc doc/manuals/acsl-implementation-%{docversion}.pdf
-%doc doc/manuals/aorai-manual-%{docversion}.pdf
-%doc doc/manuals/e-acsl-manual_%{docversion}.pdf
-%doc doc/manuals/metrics-manual-%{docversion}.pdf
-%doc doc/manuals/plugin-development-guide-%{docversion}.pdf
-%doc doc/manuals/rte-manual-%{docversion}.pdf
-%doc doc/manuals/user-manual-%{docversion}.pdf
-%doc doc/manuals/value-analysis-%{docversion}.pdf
-%doc doc/manuals/wp-manual-%{docversion}.pdf
+%doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
+%doc doc/manuals/aorai-manual-%{pkgversion}.pdf
+%doc doc/manuals/e-acsl-manual-%{pkgversion}.pdf
+%doc doc/manuals/metrics-manual-%{pkgversion}.pdf
+%doc doc/manuals/plugin-development-guide-%{pkgversion}.pdf
+%doc doc/manuals/rte-manual-%{pkgversion}.pdf
+%doc doc/manuals/user-manual-%{pkgversion}.pdf
+%doc doc/manuals/eva-manual-%{pkgversion}.pdf
+%doc doc/manuals/wp-manual-%{pkgversion}.pdf
 %doc frama-c-api
 
 %files emacs
@@ -244,6 +253,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jun  5 2019 Jerry James <loganjerry@gmail.com> - 18.0-1
+- Update to Argon version
+
 * Thu Jan 31 2019 Fedora Release Engineering <releng@fedoraproject.org> - 17.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_30_Mass_Rebuild
 
