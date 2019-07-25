@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        18.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Argon
@@ -253,6 +253,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 18.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
+
 * Wed Jun  5 2019 Jerry James <loganjerry@gmail.com> - 18.0-1
 - Update to Argon version
 
