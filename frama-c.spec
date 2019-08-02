@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        18.0
-Release:        2%{?dist}
+Version:        19.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Argon
+%global pkgversion %{version}-Potassium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
@@ -53,6 +53,7 @@ BuildRequires:  ocaml-lablgtk-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
 BuildRequires:  ocaml-num-devel
+BuildRequires:  ocaml-why3-devel
 BuildRequires:  ocaml-yojson-devel
 BuildRequires:  ocaml-zarith-devel
 BuildRequires:  python3-devel
@@ -72,7 +73,7 @@ Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|MemoryContext|Model|Mstate|Passive|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
+#%%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|MemoryContext|Model|Mstate|Passive|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -253,6 +254,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Jul 30 2019 Jerry James <loganjerry@gmail.com> - 19.0-1
+- Update to Potassium version
+
 * Thu Jul 25 2019 Fedora Release Engineering <releng@fedoraproject.org> - 18.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_31_Mass_Rebuild
 
