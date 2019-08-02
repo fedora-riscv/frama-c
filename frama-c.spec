@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -73,7 +73,7 @@ Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-#%%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Clabels|Conditions|Context|Cstring|Ctypes|Definitions|GtkSourceView2_types|Lang|LogicUsage|Marks|MemoryContext|Model|Mstate|Passive|Services|Sig|Sigs|Uses|Vset|Warning)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|GtkSourceView2_types|Marks|Services|Sig|Uses)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -254,6 +254,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Aug  2 2019 Jerry James <loganjerry@gmail.com> - 19.0-2
+- Fix list of filtered requires
+
 * Tue Jul 30 2019 Jerry James <loganjerry@gmail.com> - 19.0-1
 - Update to Potassium version
 
