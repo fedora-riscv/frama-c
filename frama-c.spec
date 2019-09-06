@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -61,6 +61,7 @@ BuildRequires:  why3
 BuildRequires:  z3
 
 Requires:       bash-completion
+Requires:       flamegraph
 Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
@@ -173,9 +174,9 @@ mkdir -p %{buildroot}%{_datadir}/icons
 cp -a icons %{buildroot}%{_datadir}/icons/hicolor
 
 # Install the bash completion file
-mkdir -p %{buildroot}%{_sysconfdir}/bash_completion.d
+mkdir -p %{buildroot}%{_datadir}/bash-completion/completions
 cp -p share/autocomplete_frama-c \
-   %{buildroot}%{_sysconfdir}/bash_completion.d/frama-c
+   %{buildroot}%{_datadir}/bash-completion/completions/frama-c
 
 # Install and bytecompile the XEmacs file
 mkdir -p %{buildroot}%{_xemacs_sitelispdir}
@@ -218,6 +219,10 @@ chmod 0755 %{buildroot}%{_datadir}/frama-c/analysis-scripts/*.{pl,py,sh}
 # Remove spurious executable bits on generated files
 chmod 0644 src/plugins/value/domains/apron/*.ml
 
+# Unbundle flamegraph
+rm -f %{buildroot}%{_datadir}/frama-c/analysis-scripts/flamegraph.pl
+ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
+
 %files
 %doc VERSION
 %license licenses/*
@@ -228,9 +233,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/%{name}-gui.desktop
+%{_datadir}/bash-completion/completions/frama-c
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
 %{_mandir}/man1/*
-%config(noreplace) %{_sysconfdir}/bash_completion.d/frama-c
 
 %files doc
 %doc doc/code/*.{css,htm,txt}
@@ -254,6 +259,10 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Sep  6 2019 Jerry James <loganjerry@gmail.com> - 19.0-3
+- Unbundle flamegraph
+- Install bash completions in the right place
+
 * Fri Aug  2 2019 Jerry James <loganjerry@gmail.com> - 19.0-2
 - Fix list of filtered requires
 
