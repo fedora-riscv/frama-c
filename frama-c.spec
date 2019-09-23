@@ -7,8 +7,8 @@
 %endif
 
 Name:           frama-c
-Version:        19.0
-Release:        3%{?dist}
+Version:        19.1
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -259,6 +259,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Sep 23 2019 Jerry James <loganjerry@gmail.com> - 19.1-1
+- Update to Potassium 19.1
+
 * Fri Sep  6 2019 Jerry James <loganjerry@gmail.com> - 19.0-3
 - Unbundle flamegraph
 - Install bash completions in the right place
