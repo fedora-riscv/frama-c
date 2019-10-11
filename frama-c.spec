@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -259,6 +259,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Oct 11 2019 Jerry James <loganjerry@gmail.com> - 19.1-2
+- Rebuild for ocaml-menhir 20190924
+
 * Mon Sep 23 2019 Jerry James <loganjerry@gmail.com> - 19.1-1
 - Update to Potassium 19.1
 
