@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -205,7 +205,9 @@ rm -f %{buildroot}%{_bindir}/frama-c{,-gui}.byte
 
 # The install step adds lots of spurious executable bits
 chmod a-x %{buildroot}%{_libdir}/*.a \
+          %{buildroot}%{_libdir}/frama-c/*.a \
           %{buildroot}%{_libdir}/frama-c/*.cmi \
+          %{buildroot}%{_libdir}/frama-c/*.cmxa \
           %{buildroot}%{_libdir}/frama-c/plugins/META* \
           %{buildroot}%{_libdir}/frama-c/plugins/*.cmi \
           %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{i,o} \
@@ -259,6 +261,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Oct 29 2019 Jerry James <loganjerry@gmail.com> - 19.1-3
+- Rebuild for why3 1.2.1
+
 * Fri Oct 11 2019 Jerry James <loganjerry@gmail.com> - 19.1-2
 - Rebuild for ocaml-menhir 20190924
 

@@ -1,0 +1,26 @@
+# THIS FILE IS FOR WHITELISTING RPMLINT ERRORS AND WARNINGS IN TASKOTRON
+# https://fedoraproject.org/wiki/Taskotron/Tasks/dist.rpmlint#Whitelisting_errors
+
+# Caused by ocaml; this package cannot fix it
+addFilter(r'frama-c\.[^:]+: E: missing-call-to-chdir-with-chroot')
+
+# The explicit lib dependency finder is mistaken in this case
+addFilter(r'frama-c\.[^:]+: E: explicit-lib-dependency ocaml-findlib')
+
+# This really is the license
+addFilter(r'W: invalid-license QPL with exceptions')
+
+# This really is a devel package
+addFilter(r'frama-c\.[^:]+: W: devel-file-in-non-devel-package')
+
+# The Requires ensure this symlink does not dangle
+addFilter(r'frama-c\.[^:]+: W: dangling-symlink .*flamegraph\.pl')
+
+# There are no man pages for the helper scripts
+addFilter(r'W: no-manual-page-for-binary (ptests|frama-c-(config|script))')
+
+# Indeed there is no documentation
+addFilter(r'frama-c-(emacs|xemacs).[^:]*: W: no-documentation')
+
+# The icons were created by the Fedora packager; there is no URL
+addFilter(r'frama-c\.spec: W: invalid-url Source[^:]+: frama-c-icons\.tar\.xz')
