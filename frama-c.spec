@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.1
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -261,6 +261,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jan 23 2020 Jerry James <loganjerry@gmail.com> - 19.1-5
+- Rebuild for apron 0.9.12
+
 * Mon Dec  9 2019 Jerry James <loganjerry@gmail.com> - 19.1-4
 - OCaml 4.09.0 (final) rebuild.
 
