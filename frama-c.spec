@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        19.1
-Release:        5%{?dist}
+Version:        20.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Potassium
+%global pkgversion %{version}-Calcium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
@@ -33,6 +33,8 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
+# Adapt to why3 1.3
+Patch0:         %{name}-why3.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -40,7 +42,6 @@ BuildRequires:  desktop-file-utils
 BuildRequires:  doxygen
 BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  graphviz
-BuildRequires:  gtksourceview2-devel
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
 BuildRequires:  ltl2ba
@@ -49,13 +50,17 @@ BuildRequires:  ocaml-apron-devel
 BuildRequires:  ocaml-biniou-devel
 BuildRequires:  ocaml-easy-format-devel
 BuildRequires:  ocaml-findlib-devel
-BuildRequires:  ocaml-lablgtk-devel
+BuildRequires:  ocaml-lablgtk3-devel
+BuildRequires:  ocaml-lablgtk3-sourceview3-devel
+BuildRequires:  ocaml-num-devel
 BuildRequires:  ocaml-ocamldoc
 BuildRequires:  ocaml-ocamlgraph-devel
-BuildRequires:  ocaml-num-devel
+BuildRequires:  ocaml-ocp-indent-devel
+BuildRequires:  ocaml-ppx-deriving-yojson-devel
 BuildRequires:  ocaml-why3-devel
 BuildRequires:  ocaml-yojson-devel
 BuildRequires:  ocaml-zarith-devel
+BuildRequires:  ocaml-zmq-devel
 BuildRequires:  python3-devel
 BuildRequires:  why3
 BuildRequires:  z3
@@ -66,15 +71,13 @@ Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
-Requires:       ocaml-findlib
-Requires:       ocaml-yojson
 
 Suggests:       alt-ergo
 Suggests:       coq
 Suggests:       z3
 
 # Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|GtkSourceView2_types|Marks|Services|Sig|Uses)\\\)
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -117,9 +120,14 @@ This package contains an XEmacs support file for working with C source
 files marked up with ACSL.
 
 %prep
-%setup -q -n %{name}-%{pkgversion}
+%autosetup -n %{name}-%{pkgversion} -p0
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 15 -n %{name}-%{pkgversion}
+
+fixtimestamp() {
+  touch -r $1.orig $1
+  rm -f $1.orig
+}
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -127,10 +135,7 @@ cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
    %{SOURCE12} %{SOURCE13} %{SOURCE14} doc/manuals
 
 # Link with the Fedora LDFLAGS
-sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic|" Makefile
-for flag in $RPM_LD_FLAGS; do
-  sed -i "/OLINKFLAGS/s|-linkall|& -ccopt $flag|" Makefile
-done
+sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '$RPM_LD_FLAGS'|" Makefile
 
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
@@ -138,11 +143,14 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
+# Use python3
+sed -i.orig 's,env python$,python3,' share/analysis-scripts/list_files.py
+fixtimestamp share/analysis-scripts/list_files.py
+
 # Do not use env
-for fil in share/analysis-scripts/list_files.py; do
-  sed -i.orig 's,%{_bindir}/env python,%{_bindir}/python3,' $fil
-  touch -r $fil.orig $fil
-  rm $fil.orig
+for fil in share/analysis-scripts/{find_fun,make_template,make_wrapper,summary}.py; do
+  sed -i.orig 's,%{_bindir}/env python3,%{_bindir}/python3,' $fil
+  fixtimestamp $fil
 done
 
 %build
@@ -231,7 +239,6 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_bindir}/*
 %{_libdir}/frama-c/
 %{_libdir}/libeacsl-dlmalloc.a
-%{_libdir}/libeacsl-gmp.a
 %{_datadir}/frama-c/
 %{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/%{name}-gui.desktop
@@ -261,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Mar 25 2020 Jerry James <loganjerry@gmail.com> - 20.0-1
+- Update to Calcium 20.0
+
 * Thu Jan 23 2020 Jerry James <loganjerry@gmail.com> - 19.1-5
 - Rebuild for apron 0.9.12
 

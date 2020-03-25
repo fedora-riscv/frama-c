@@ -4,9 +4,6 @@
 # Caused by ocaml; this package cannot fix it
 addFilter(r'frama-c\.[^:]+: E: missing-call-to-chdir-with-chroot')
 
-# The explicit lib dependency finder is mistaken in this case
-addFilter(r'frama-c\.[^:]+: E: explicit-lib-dependency ocaml-findlib')
-
 # This really is the license
 addFilter(r'W: invalid-license QPL with exceptions')
 
