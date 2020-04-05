@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        20.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Calcium
@@ -268,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sun Apr 05 2020 Richard W.M. Jones <rjones@redhat.com> - 20.0-2
+- Update all OCaml dependencies for RPM 4.16.
+
 * Wed Mar 25 2020 Jerry James <loganjerry@gmail.com> - 20.0-1
 - Update to Calcium 20.0
 
