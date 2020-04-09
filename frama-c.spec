@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        20.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Calcium
@@ -76,8 +76,8 @@ Suggests:       alt-ergo
 Suggests:       coq
 Suggests:       z3
 
-# Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)
+# Do not Require private ocaml interfaces that we don't Provide
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)|ocamlx\\\(Design|Dgraph_helper|Gtk_(form|helper)|Gui_parameters|History|Pretty_source|W(box|idget|palette|pane|table|text|util)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
@@ -268,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Apr  9 2020 Jerry James <loganjerry@gmail.com> - 20.0-2
+- Do not Require private ocaml interfaces that we don't Provide
+
 * Wed Mar 25 2020 Jerry James <loganjerry@gmail.com> - 20.0-1
 - Update to Calcium 20.0
 
