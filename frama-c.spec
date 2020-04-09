@@ -76,8 +76,8 @@ Suggests:       alt-ergo
 Suggests:       coq
 Suggests:       z3
 
-# Filter out bogus requires
-%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)
+# Do not Require private ocaml interfaces that we don't Provide
+%global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)|ocamlx\\\(Design|Dgraph_helper|Gtk_(form|helper)|Gui_parameters|History|Pretty_source|W(box|idget|palette|pane|table|text|util)\\\)
 
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
