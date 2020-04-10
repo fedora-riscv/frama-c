@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        19.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Potassium
@@ -261,6 +261,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Apr 10 2020 Jerry James <loganjerry@gmail.com> - 19.1-4
+- Rebuild due to rebuilt flocq and why3
+
 * Tue Oct 29 2019 Jerry James <loganjerry@gmail.com> - 19.1-3
 - Rebuild for why3 1.2.1
 
