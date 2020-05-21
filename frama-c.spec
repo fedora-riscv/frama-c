@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        20.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Calcium
@@ -65,12 +65,13 @@ BuildRequires:  python3-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
-Requires:       bash-completion
 Requires:       flamegraph
 Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
+
+Recommends:     bash-completion
 
 Suggests:       alt-ergo
 Suggests:       coq
@@ -268,6 +269,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed May 20 2020 Jerry James <loganjerry@gmail.com> - 20.0-3
+- Rebuild for coq 8.11.1
+
 * Thu Apr  9 2020 Jerry James <loganjerry@gmail.com> - 20.0-2
 - Do not Require private ocaml interfaces that we don't Provide
 
