@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        20.0
-Release:        4%{?dist}
+Version:        21.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Calcium
+%global pkgversion %{version}-Scandium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
@@ -33,8 +33,6 @@ Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
-# Adapt to why3 1.3
-Patch0:         %{name}-why3.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  coq
@@ -270,6 +268,10 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Jun 13 2020 Jerry James <loganjerry@gmail.com> - 21.0-1
+- Update to Scandium 21.0
+- Drop upstreamed -why3 patch
+
 * Wed May 20 2020 Jerry James <loganjerry@gmail.com> - 20.0-4
 - Rebuild for coq 8.11.1
 
