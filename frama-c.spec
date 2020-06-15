@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        21.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Scandium
@@ -268,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Jun 15 2020 Jerry James <loganjerry@gmail.com> - 21.0-2
+- Rebuild for coq 8.11.2
+
 * Sat Jun 13 2020 Jerry James <loganjerry@gmail.com> - 21.0-1
 - Update to Scandium 21.0
 - Drop upstreamed -why3 patch
