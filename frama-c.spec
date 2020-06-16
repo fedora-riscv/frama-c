@@ -63,7 +63,6 @@ BuildRequires:  python3-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
-Requires:       bash-completion
 Requires:       flamegraph
 Requires:       gcc
 Requires:       graphviz
