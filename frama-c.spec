@@ -7,8 +7,8 @@
 %endif
 
 Name:           frama-c
-Version:        21.0
-Release:        2%{?dist}
+Version:        21.1
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Scandium
@@ -63,15 +63,16 @@ BuildRequires:  python3-devel
 BuildRequires:  why3
 BuildRequires:  z3
 
+Requires:       alt-ergo
 Requires:       flamegraph
 Requires:       gcc
 Requires:       graphviz
 Requires:       hicolor-icon-theme
 Requires:       ltl2ba
+Requires:       why3
 
 Recommends:     bash-completion
 
-Suggests:       alt-ergo
 Suggests:       coq
 Suggests:       z3
 
@@ -267,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jun 25 2020 Jerry James <loganjerry@gmail.com> - 21.1-1
+- Update to Scandium 21.1
+
 * Mon Jun 15 2020 Jerry James <loganjerry@gmail.com> - 21.0-2
 - Rebuild for coq 8.11.2
 
