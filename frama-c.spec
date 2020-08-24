@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        21.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Scandium
@@ -268,6 +268,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Aug 24 2020 Richard W.M. Jones <rjones@redhat.com> - 21.1-4
+- OCaml 4.11.0 rebuild
+
 * Sat Aug 01 2020 Fedora Release Engineering <releng@fedoraproject.org> - 21.1-3
 - Second attempt - Rebuilt for
   https://fedoraproject.org/wiki/Fedora_33_Mass_Rebuild
