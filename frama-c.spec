@@ -14,7 +14,7 @@ Summary:        Framework for source code analysis of C software
 %global pkgversion %{version}-Scandium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
-License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and (QPL with exceptions)
+License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
 URL:            http://frama-c.com/
 Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        http://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
@@ -160,7 +160,7 @@ done
 make
 
 %install
-make install DESTDIR=%{buildroot}
+%make_install
 
 %ifarch %{ocaml_native_compiler}
 mv -f %{buildroot}%{_bindir}/ptests.opt %{buildroot}%{_bindir}/ptests
@@ -169,6 +169,9 @@ mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
 mv -f %{buildroot}%{_bindir}/ptests.byte %{buildroot}%{_bindir}/ptests
 %endif
+
+# Install the opam file
+cp -p opam/opam %{buildroot}%{_libdir}/frama-c
 
 # Install the desktop file
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE3}
@@ -268,6 +271,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Sep  1 2020 Jerry James <loganjerry@gmail.com> - 21.1-4
+- Rebuild for coq 8.12.0
+
 * Mon Aug 24 2020 Richard W.M. Jones <rjones@redhat.com> - 21.1-4
 - OCaml 4.11.0 rebuild
 
