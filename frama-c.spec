@@ -34,6 +34,9 @@ Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.p
 # Icons created with gimp from the official upstream icon
 Source15:       %{name}-icons.tar.xz
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1874879
+ExcludeArch: s390x
+
 BuildRequires:  alt-ergo
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
