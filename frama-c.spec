@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        21.1
-Release:        5%{?dist}
+Release:        5%{?dist}.1
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Scandium
@@ -274,6 +274,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Sep 03 2020 Richard W.M. Jones <rjones@redhat.com> - 21.1-5.1
+- Bump release and rebuild.
+
 * Wed Sep 02 2020 Richard W.M. Jones <rjones@redhat.com> - 21.1-5
 - OCaml 4.11.1 rebuild
 
