@@ -46,6 +46,7 @@ BuildRequires:  graphviz
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
 BuildRequires:  ltl2ba
+BuildRequires:  make
 BuildRequires:  ocaml
 BuildRequires:  ocaml-apron-devel
 BuildRequires:  ocaml-biniou-devel
