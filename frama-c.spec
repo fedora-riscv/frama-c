@@ -7,32 +7,33 @@
 %endif
 
 Name:           frama-c
-Version:        21.1
-Release:        7%{?dist}
+Version:        22.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Scandium
+%global pkgversion %{version}-Titanium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
-URL:            http://frama-c.com/
-Source0:        http://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
-Source1:        http://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
+URL:            https://frama-c.com/
+Source0:        https://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
+Source1:        https://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
 Source2:        frama-c-1.6.licensing
 Source3:        %{name}-gui.desktop
 Source4:        %{name}-gui.appdata.xml
 Source5:        acsl.el
-Source6:        http://frama-c.com/download/user-manual-%{pkgversion}.pdf
-Source7:        http://frama-c.com/download/plugin-development-guide-%{pkgversion}.pdf
-Source8:        http://frama-c.com/download/acsl-implementation-%{pkgversion}.pdf
-Source9:        http://frama-c.com/download/aorai-manual-%{pkgversion}.pdf
-Source10:       http://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
-Source11:       http://frama-c.com/download/rte-manual-%{pkgversion}.pdf
-Source12:       http://frama-c.com/download/eva-manual-%{pkgversion}.pdf
-Source13:       http://frama-c.com/download/wp-manual-%{pkgversion}.pdf
-Source14:       http://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.pdf
 # Icons created with gimp from the official upstream icon
-Source15:       %{name}-icons.tar.xz
+Source6:        %{name}-icons.tar.xz
+Source7:        https://frama-c.com/download/user-manual-%{pkgversion}.pdf
+Source8:        https://frama-c.com/download/plugin-development-guide-%{pkgversion}.pdf
+Source9:        https://frama-c.com/download/acsl-implementation-%{pkgversion}.pdf
+Source10:       https://frama-c.com/download/aorai-manual-%{pkgversion}.pdf
+Source11:       https://frama-c.com/download/e-acsl/e-acsl-manual-%{pkgversion}.pdf
+Source12:       https://frama-c.com/download/e-acsl/e-acsl-implementation-%{pkgversion}.pdf
+Source13:       https://frama-c.com/download/eva-manual-%{pkgversion}.pdf
+Source14:       https://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
+Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
+Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
 # https://bugzilla.redhat.com/show_bug.cgi?id=1874879
 ExcludeArch: s390x
@@ -42,6 +43,7 @@ BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  doxygen
 BuildRequires:  emacs xemacs-nox xemacs-packages-base
+BuildRequires:  flamegraph
 BuildRequires:  graphviz
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
@@ -64,6 +66,7 @@ BuildRequires:  ocaml-yojson-devel
 BuildRequires:  ocaml-zarith-devel
 BuildRequires:  ocaml-zmq-devel
 BuildRequires:  python3-devel
+BuildRequires:  time
 BuildRequires:  why3
 BuildRequires:  z3
 
@@ -126,7 +129,7 @@ files marked up with ACSL.
 %prep
 %autosetup -n %{name}-%{pkgversion} -p0
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
-%setup -q -T -D -a 15 -n %{name}-%{pkgversion}
+%setup -q -T -D -a 6 -n %{name}-%{pkgversion}
 
 fixtimestamp() {
   touch -r $1.orig $1
@@ -135,8 +138,8 @@ fixtimestamp() {
 
 # Copy in the manuals
 mkdir doc/manuals
-cp -p %{SOURCE6} %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} \
-   %{SOURCE12} %{SOURCE13} %{SOURCE14} doc/manuals
+cp -p %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} %{SOURCE12} \
+   %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16} doc/manuals
 
 # Link with the Fedora LDFLAGS
 sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '$RPM_LD_FLAGS'|" Makefile
@@ -147,15 +150,21 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 # Build buckx with the right flags
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
-# Use python3
-sed -i.orig 's,env python$,python3,' share/analysis-scripts/list_files.py
-fixtimestamp share/analysis-scripts/list_files.py
-
 # Do not use env
-for fil in share/analysis-scripts/{find_fun,make_template,make_wrapper,summary}.py; do
+for fil in share/analysis-scripts/{find_fun,function_finder,list_files,make_template,make_wrapper,normalize_jcdb,summary}.py; do
   sed -i.orig 's,%{_bindir}/env python3,%{_bindir}/python3,' $fil
   fixtimestamp $fil
 done
+
+%ifarch %{ocaml_native_compiler}
+# Some tests run the bytecode toplevel.  This fails because why3 is built with
+# native code, not bytecode, so %%{_libdir}/ocaml/why3/why3.cma does not exist.
+sed -i 's/toplevel\.byte/toplevel.opt/g' \
+  tests/dynamic/dynamic.i \
+  tests/journal/control.i \
+  tests/journal/control2.c \
+  tests/pdg/dyn_dpds.c
+%endif
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -240,6 +249,9 @@ chmod 0644 src/plugins/value/domains/apron/*.ml
 rm -f %{buildroot}%{_datadir}/frama-c/analysis-scripts/flamegraph.pl
 ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 
+%check
+%make_build PTESTS_OPTS=-error-code tests
+
 %files
 %doc VERSION
 %license licenses/*
@@ -257,12 +269,13 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %doc doc/code/*.{css,htm,txt}
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
+%doc doc/manuals/e-acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/e-acsl-manual-%{pkgversion}.pdf
+%doc doc/manuals/eva-manual-%{pkgversion}.pdf
 %doc doc/manuals/metrics-manual-%{pkgversion}.pdf
 %doc doc/manuals/plugin-development-guide-%{pkgversion}.pdf
 %doc doc/manuals/rte-manual-%{pkgversion}.pdf
 %doc doc/manuals/user-manual-%{pkgversion}.pdf
-%doc doc/manuals/eva-manual-%{pkgversion}.pdf
 %doc doc/manuals/wp-manual-%{pkgversion}.pdf
 %doc frama-c-api
 
@@ -275,6 +288,10 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Nov 20 2020 Jerry James <loganjerry@gmail.com> - 22.0-1
+- Update to Titanium 22.0
+- Add %%check script
+
 * Mon Nov 16 2020 Jerry James <loganjerry@gmail.com> - 21.1-7
 - Rebuild for ocaml-zarith 1.11
 
