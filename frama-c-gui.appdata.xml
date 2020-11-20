@@ -20,27 +20,27 @@
  </description>
  <screenshots>
   <screenshot type="default">
-   <image>http://frama-c.com/media/first.png</image>
+   <image>https://www.frama-c.com/assets/img/home/gui-overview.png</image>
    <caption>Analysis of first.c</caption>
   </screenshot>
   <screenshot>
-   <image>http://frama-c.com/media/first_S.png</image>
-   <caption>Informational messages for first.c</caption>
+   <image>https://www.frama-c.com/assets/img/home/value-analysis.png</image>
+   <caption>Value analysis of first.c</caption>
   </screenshot>
   <screenshot>
-   <image>http://frama-c.com/media/first_effect.png</image>
-   <caption>Effect of a modification statement</caption>
+   <image>https://www.frama-c.com/assets/img/home/effect-analysis.png</image>
+   <caption>Effect analysis of first.c</caption>
   </screenshot>
   <screenshot>
-   <image>http://frama-c.com/media/first_defs.png</image>
-   <caption>Show definitions</caption>
+   <image>https://www.frama-c.com/assets/img/home/dep-analysis.png</image>
+   <caption>Dependency analysis of first.c</caption>
   </screenshot>
   <screenshot>
-   <image>http://frama-c.com/media/first_impact.png</image>
-   <caption>Impact analysis</caption>
+   <image>https://www.frama-c.com/assets/img/home/impact-analysis.png</image>
+   <caption>Impact analysis of first.c</caption>
   </screenshot>
  </screenshots>
- <updatecontact>frama-c-discuss@lists.gforge.inria.fr</updatecontact>
- <url type="homepage">http://frama-c.com/</url>
+ <updatecontact>frama-c-discuss@groupes.renater.fr</updatecontact>
+ <url type="homepage">https://frama-c.com/</url>
  <url type="bugtracker">https://bts.frama-c.com/</url>
 </component>
