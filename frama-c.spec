@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        22.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Titanium
@@ -291,6 +291,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Dec 23 2020 Jerry James <loganjerry@gmail.com> - 22.0-4
+- Rebuild for coq 8.12.2
+
 * Mon Dec  7 2020 Jerry James <loganjerry@gmail.com> - 22.0-3
 - Rebuild for ocaml-ppx-deriving-yojson 3.6.1
 
