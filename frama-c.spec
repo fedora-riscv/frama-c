@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        22.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Titanium
@@ -291,6 +291,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 22.0-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
+
 * Sat Jan  2 2021 Jerry James <loganjerry@gmail.com> - 22.0-5
 - Rebuild for flocq 3.4.0
 
