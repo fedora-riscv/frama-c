@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>frama-c-gui.desktop</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0+</project_license>
+  <name>frama-c</name>
+  <summary>Framework for source code analysis of C software</summary>
+  <description>
+    <p>
+      Frama-C is a suite of tools dedicated to the analysis of the source code
+      of software written in C.
+    </p>
+    <p>
+      Frama-C gathers several static analysis techniques in a single
+      collaborative framework.  The collaborative approach of Frama-C allows
+      static analyzers to build upon the results already computed by other
+      analyzers in the framework.  Thanks to this approach, Frama-C provides
+      sophisticated tools, such as a slicer and dependency analysis.
+    </p>
+  </description>
+  <launchable type="desktop-id">frama-c-gui.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://www.frama-c.com/assets/img/home/gui-overview.png</image>
+      <caption>Analysis of first.c</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://www.frama-c.com/assets/img/home/value-analysis.png</image>
+      <caption>Value analysis of first.c</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://www.frama-c.com/assets/img/home/effect-analysis.png</image>
+      <caption>Effect analysis of first.c</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://www.frama-c.com/assets/img/home/dep-analysis.png</image>
+      <caption>Dependency analysis of first.c</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://www.frama-c.com/assets/img/home/impact-analysis.png</image>
+      <caption>Impact analysis of first.c</caption>
+    </screenshot>
+  </screenshots>
+  <update_contact>frama-c-discuss@groupes.renater.fr</update_contact>
+  <url type="homepage">https://frama-c.com/</url>
+  <url type="bugtracker">https://bts.frama-c.com/</url>
+  <content_rating type="oars-1.0"></content_rating>
+  <provides>
+    <binary>frama-c</binary>
+    <binary>frama-c-gui</binary>
+  </provides>
+</component>

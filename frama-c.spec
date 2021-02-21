@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        22.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Titanium
@@ -20,7 +20,7 @@ Source0:        https://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        https://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
 Source2:        frama-c-1.6.licensing
 Source3:        %{name}-gui.desktop
-Source4:        %{name}-gui.appdata.xml
+Source4:        %{name}-gui.metainfo.xml
 Source5:        acsl.el
 # Icons created with gimp from the official upstream icon
 Source6:        %{name}-icons.tar.xz
@@ -46,6 +46,7 @@ BuildRequires:  doxygen
 BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  flamegraph
 BuildRequires:  graphviz
+BuildRequires:  libappstream-glib
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
 BuildRequires:  ltl2ba
@@ -166,6 +167,9 @@ sed -i 's/toplevel\.byte/toplevel.opt/g' \
   tests/pdg/dyn_dpds.c
 %endif
 
+# Allow use of coq 8.13
+sed -i 's/8\.12\.\*/&|8.13.*/' src/plugins/wp/configure configure
+
 %build
 # This option prints the actual make commands so we can see what's
 # happening (eg: for debugging the spec file)
@@ -190,8 +194,10 @@ cp -p opam/opam %{buildroot}%{_libdir}/frama-c
 desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE3}
 
 # Install the AppData file
-mkdir -p %{buildroot}%{_datadir}/appdata
-install -pm 644 %{SOURCE4} %{buildroot}%{_datadir}/appdata
+mkdir -p %{buildroot}%{_metainfodir}
+install -pm 644 %{SOURCE4} %{buildroot}%{_metainfodir}
+appstream-util validate-relax --nonet \
+  %{buildroot}%{_metainfodir}/%{name}-gui.metainfo.xml
 
 # Install the icons
 mkdir -p %{buildroot}%{_datadir}/icons
@@ -262,10 +268,10 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_libdir}/frama-c/
 %{_libdir}/libeacsl-dlmalloc.a
 %{_datadir}/frama-c/
-%{_datadir}/appdata/%{name}-gui.appdata.xml
 %{_datadir}/applications/%{name}-gui.desktop
 %{_datadir}/bash-completion/completions/frama-c
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
+%{_metainfodir}/%{name}-gui.metainfo.xml
 %{_mandir}/man1/*
 
 %files doc
@@ -291,6 +297,10 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Feb 20 2021 Jerry James <loganjerry@gmail.com> - 22.0-7
+- Rebuild for coq 8.13.0
+- Update metainfo and install in metainfodir
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 22.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
