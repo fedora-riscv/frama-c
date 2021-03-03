@@ -43,7 +43,7 @@
   </screenshots>
   <update_contact>frama-c-discuss@groupes.renater.fr</update_contact>
   <url type="homepage">https://frama-c.com/</url>
-  <url type="bugtracker">https://bts.frama-c.com/</url>
+  <url type="bugtracker">https://git.frama-c.com/pub/frama-c/issues</url>
   <content_rating type="oars-1.0"></content_rating>
   <provides>
     <binary>frama-c</binary>
