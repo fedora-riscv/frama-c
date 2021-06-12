@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        22.0
-Release:        10%{?dist}
+Release:        11%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Titanium
@@ -19,8 +19,8 @@ URL:            https://frama-c.com/
 Source0:        https://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        https://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
 Source2:        frama-c-1.6.licensing
-Source3:        %{name}-gui.desktop
-Source4:        %{name}-gui.metainfo.xml
+Source3:        com.%{name}.%{name}-gui.desktop
+Source4:        com.%{name}.%{name}-gui.metainfo.xml
 Source5:        acsl.el
 # Icons created with gimp from the official upstream icon
 Source6:        %{name}-icons.tar.xz
@@ -39,6 +39,7 @@ Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 ExcludeArch: s390x
 
 BuildRequires:  alt-ergo
+BuildRequires:  appstream
 BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  dos2unix
@@ -46,7 +47,6 @@ BuildRequires:  doxygen
 BuildRequires:  emacs xemacs-nox xemacs-packages-base
 BuildRequires:  flamegraph
 BuildRequires:  graphviz
-BuildRequires:  libappstream-glib
 BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
 BuildRequires:  ltl2ba
@@ -196,8 +196,8 @@ desktop-file-install --dir=%{buildroot}%{_datadir}/applications/ %{SOURCE3}
 # Install the AppData file
 mkdir -p %{buildroot}%{_metainfodir}
 install -pm 644 %{SOURCE4} %{buildroot}%{_metainfodir}
-appstream-util validate-relax --nonet \
-  %{buildroot}%{_metainfodir}/%{name}-gui.metainfo.xml
+appstreamcli validate --no-net \
+  %{buildroot}%{_metainfodir}/com.%{name}.%{name}-gui.metainfo.xml
 
 # Install the icons
 mkdir -p %{buildroot}%{_datadir}/icons
@@ -268,10 +268,10 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_libdir}/frama-c/
 %{_libdir}/libeacsl-dlmalloc.a
 %{_datadir}/frama-c/
-%{_datadir}/applications/%{name}-gui.desktop
+%{_datadir}/applications/com.%{name}.%{name}-gui.desktop
 %{_datadir}/bash-completion/completions/frama-c
 %{_datadir}/icons/hicolor/*/apps/%{name}.png
-%{_metainfodir}/%{name}-gui.metainfo.xml
+%{_metainfodir}/com.%{name}.%{name}-gui.metainfo.xml
 %{_mandir}/man1/*
 
 %files doc
@@ -297,6 +297,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Jun  8 2021 Jerry James <loganjerry@gmail.com> - 22.0-11
+- Rebuild for ocaml-ocamlgraph 2.0.0
+
 * Mon Mar 15 2021 Richard W.M. Jones <rjones@redhat.com> - 22.0-10
 - Bump and rebuild for updated ocaml-findlib.
 

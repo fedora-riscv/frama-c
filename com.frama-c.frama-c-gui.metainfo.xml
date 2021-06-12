@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>frama-c-gui.desktop</id>
+  <id>com.frama-c.frama-c-gui</id>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>GPL-2.0+</project_license>
+  <project_license>GPL-2.0-or-later</project_license>
   <name>frama-c</name>
   <summary>Framework for source code analysis of C software</summary>
   <description>
@@ -18,7 +18,7 @@
       sophisticated tools, such as a slicer and dependency analysis.
     </p>
   </description>
-  <launchable type="desktop-id">frama-c-gui.desktop</launchable>
+  <launchable type="desktop-id">com.frama-c.frama-c-gui.desktop</launchable>
   <screenshots>
     <screenshot type="default">
       <image>https://www.frama-c.com/assets/img/home/gui-overview.png</image>
