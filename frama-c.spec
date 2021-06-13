@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        22.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Titanium
@@ -297,6 +297,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Sat Jun 12 2021 Jerry James <loganjerry@gmail.com> - 22.0-9
+- Rebuild for coq 8.13.2
+
 * Wed Mar  3 2021 Jerry James <loganjerry@gmail.com> - 22.0-8
 - Rebuild for coq 8.13.1 and ocaml-zarith 1.12
 
