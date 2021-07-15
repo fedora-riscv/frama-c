@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        22.0
-Release:        11%{?dist}
+Version:        23.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Titanium
+%global pkgversion %{version}-Vanadium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
@@ -152,7 +152,7 @@ sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
 
 # Do not use env
-for fil in share/analysis-scripts/{find_fun,function_finder,list_files,make_template,make_wrapper,normalize_jcdb,summary}.py; do
+for fil in share/analysis-scripts/{build_callgraph,detect_recursion,estimate_difficulty,find_fun,function_finder,heuristic_list_functions,list_files,make_template,make_wrapper,normalize_jcdb,print_callgraph,summary}.py; do
   sed -i.orig 's,%{_bindir}/env python3,%{_bindir}/python3,' $fil
   fixtimestamp $fil
 done
@@ -169,6 +169,9 @@ sed -i 's/toplevel\.byte/toplevel.opt/g' \
 
 # Allow use of coq 8.13
 sed -i 's/8\.12\.\*/&|8.13.*/' src/plugins/wp/configure configure
+
+# Do not apply DESTDIR twice
+sed -i 's/\$(DESTDIR)//' share/Makefile.dynamic
 
 %build
 # This option prints the actual make commands so we can see what's
@@ -228,20 +231,20 @@ cp -p %{SOURCE5} %{buildroot}%{_emacs_sitestartdir}
 popd
 
 # Remove files we don't actually want
+rm -f %{buildroot}%{_datadir}/frama-c/{autocomplete_frama-c,configure.ac}
 rm -f %{buildroot}%{_libdir}/frama-c/*.{cmo,cmx,o}
 %ifarch %{ocaml_native_compiler}
 rm -f %{buildroot}%{_bindir}/frama-c{,-gui}.byte
 %endif
 
 # The install step adds lots of spurious executable bits
-chmod a-x %{buildroot}%{_libdir}/*.a \
-          %{buildroot}%{_libdir}/frama-c/*.a \
-          %{buildroot}%{_libdir}/frama-c/*.cmi \
-          %{buildroot}%{_libdir}/frama-c/*.cmxa \
-          %{buildroot}%{_libdir}/frama-c/plugins/META* \
+chmod a-x %{buildroot}%{_libdir}/frama-c/*.{a,cm{a,i,xa}} \
+          %{buildroot}%{_libdir}/frama-c/META* \
+          %{buildroot}%{_libdir}/frama-c/e-acsl/*.a \
           %{buildroot}%{_libdir}/frama-c/plugins/*.cmi \
+          %{buildroot}%{_libdir}/frama-c/plugins/META* \
           %{buildroot}%{_libdir}/frama-c/plugins/gui/*.cm{i,o} \
-          %{buildroot}%{_libdir}/frama-c/plugins/top/*.cm{o,x} \
+          %{buildroot}%{_libdir}/frama-c/plugins/top/*.cm{i,o,x} \
           %{buildroot}%{_mandir}/man1/*
 find %{buildroot}%{_datadir}/frama-c -type f -perm /0111 -exec chmod a-x {} +
 
@@ -266,7 +269,6 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %license licenses/*
 %{_bindir}/*
 %{_libdir}/frama-c/
-%{_libdir}/libeacsl-dlmalloc.a
 %{_datadir}/frama-c/
 %{_datadir}/applications/com.%{name}.%{name}-gui.desktop
 %{_datadir}/bash-completion/completions/frama-c
@@ -297,6 +299,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jul 14 2021 Jerry James <loganjerry@gmail.com> - 23.0-1
+- Update to Vanadium 23.0
+
 * Tue Jun  8 2021 Jerry James <loganjerry@gmail.com> - 22.0-11
 - Rebuild for ocaml-ocamlgraph 2.0.0
 
