@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        23.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Vanadium
@@ -299,6 +299,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Jul 30 2021 Jerry James <loganjerry@gmail.com> - 23.0-3
+- Rebuild for changed ocamlx(Dynlink)
+
 * Wed Jul 21 2021 Fedora Release Engineering <releng@fedoraproject.org> - 23.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
 
