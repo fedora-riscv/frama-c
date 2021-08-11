@@ -7,7 +7,7 @@
 %endif
 
 Name:           frama-c
-Version:        23.0
+Version:        23.1
 Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
@@ -261,7 +261,8 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 # FIXME: tests only pass on x86_64
 %ifarch x86_64
 %check
-%make_build PTESTS_OPTS=-error-code tests
+# Parallel testing sometimes fails
+make PTESTS_OPTS=-error-code tests
 %endif
 
 %files
@@ -299,6 +300,9 @@ ln -s %{_bindir}/flamegraph.pl %{buildroot}%{_datadir}/frama-c/analysis-scripts
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Aug 11 2021 Jerry James <loganjerry@gmail.com> - 23.1-1
+- Version 23.1
+
 * Wed Jul 14 2021 Jerry James <loganjerry@gmail.com> - 23.0-1
 - Update to Vanadium 23.0
 
