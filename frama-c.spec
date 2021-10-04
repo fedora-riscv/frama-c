@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        23.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Vanadium
@@ -34,9 +34,6 @@ Source13:       https://frama-c.com/download/eva-manual-%{pkgversion}.pdf
 Source14:       https://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
-
-# https://bugzilla.redhat.com/show_bug.cgi?id=1874879
-ExcludeArch: s390x
 
 BuildRequires:  alt-ergo
 BuildRequires:  appstream
@@ -300,6 +297,9 @@ make PTESTS_OPTS=-error-code tests
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Oct 04 2021 Richard W.M. Jones <rjones@redhat.com> - 23.1-2
+- Try to build on s390x with OCaml 4.13
+
 * Wed Aug 11 2021 Jerry James <loganjerry@gmail.com> - 23.1-1
 - Version 23.1
 
