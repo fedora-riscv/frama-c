@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        23.1
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Vanadium
@@ -297,6 +297,9 @@ make PTESTS_OPTS=-error-code tests
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Oct 05 2021 Richard W.M. Jones <rjones@redhat.com> - 23.1-3
+- OCaml 4.13.1 build
+
 * Mon Oct 04 2021 Richard W.M. Jones <rjones@redhat.com> - 23.1-2
 - Try to build on s390x with OCaml 4.13
 
