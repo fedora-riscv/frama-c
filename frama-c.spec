@@ -35,6 +35,9 @@ Source14:       https://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
+# Small fix for OCaml 4.13
+Patch1:         frama-c-23.1-Vanadium-fix-ocaml-413.patch
+
 BuildRequires:  alt-ergo
 BuildRequires:  appstream
 BuildRequires:  coq
@@ -125,7 +128,7 @@ This package contains an XEmacs support file for working with C source
 files marked up with ACSL.
 
 %prep
-%autosetup -n %{name}-%{pkgversion} -p0
+%autosetup -n %{name}-%{pkgversion} -p1
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 6 -n %{name}-%{pkgversion}
 

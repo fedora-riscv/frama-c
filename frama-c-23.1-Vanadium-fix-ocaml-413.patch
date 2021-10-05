@@ -1,0 +1,11 @@
+--- frama-c-23.1-Vanadium.old/src/plugins/wp/cil2cfg.ml	2021-07-21 01:00:00.000000000 +0100
++++ frama-c-23.1-Vanadium.new/src/plugins/wp/cil2cfg.ml	2021-10-05 17:49:58.095191025 +0100
+@@ -1395,7 +1395,7 @@
+   type dot = {
+     name: string;
+     chan: out_channel;
+-    fmt : Stdlib__format.formatter;
++    fmt : Stdlib__Format.formatter;
+   }
+ 
+   let create kf =
