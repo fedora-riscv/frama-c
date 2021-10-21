@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        23.1
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Vanadium
@@ -35,6 +35,9 @@ Source14:       https://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
+# Adapt to coq 8.14
+Patch0:         %{name}-coq8.14.patch
+
 # Small fix for OCaml 4.13
 Patch1:         frama-c-23.1-Vanadium-fix-ocaml-413.patch
 
@@ -44,7 +47,7 @@ BuildRequires:  coq
 BuildRequires:  desktop-file-utils
 BuildRequires:  dos2unix
 BuildRequires:  doxygen
-BuildRequires:  emacs xemacs-nox xemacs-packages-base
+BuildRequires:  emacs
 BuildRequires:  flamegraph
 BuildRequires:  graphviz
 BuildRequires:  libgnomecanvas-devel
@@ -87,6 +90,9 @@ Suggests:       z3
 # Do not Require private ocaml interfaces that we don't Provide
 %global __requires_exclude ocaml\\\((Callgraph_api|Cg|Flags|Generator|Marks|Services|Uses|Why3Provers)\\\)|ocamlx\\\(Design|Dgraph_helper|Gtk_(form|helper)|Gui_parameters|History|Pretty_source|W(box|idget|palette|pane|table|text|util)\\\)
 
+# This can be removed when Fedora 38 reaches EOL
+Obsoletes:      frama-c-xemacs < 23.1-2
+
 %description
 Frama-C is a suite of tools dedicated to the analysis of the source
 code of software written in C.
@@ -116,17 +122,6 @@ BuildArch:      noarch
 This package contains an Emacs support file for working with C source
 files marked up with ACSL.
 
-%package xemacs
-Summary:        XEmacs support file for ACSL markup
-License:        LGPLv2
-Requires:       %{name} = %{version}-%{release}
-Requires:       xemacs(bin), xemacs-packages-extra
-BuildArch:      noarch
-
-%description xemacs
-This package contains an XEmacs support file for working with C source
-files marked up with ACSL.
-
 %prep
 %autosetup -n %{name}-%{pkgversion} -p1
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
@@ -142,14 +137,18 @@ mkdir doc/manuals
 cp -p %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} %{SOURCE12} \
    %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16} doc/manuals
 
-# Link with the Fedora LDFLAGS
-sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '$RPM_LD_FLAGS'|" Makefile
+# Link with the Fedora LDFLAGS, generate debuginfo, and fix an underlinked
+# plugin
+sed -e "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '%{build_ldflags}'|" \
+    -e '/OCAMLMKLIB/s/\$(OPT_LIBS).*/& -lm/' \
+    -e 's/\$(OCAMLMKLIB)/& -g/' \
+    -i Makefile
 
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 
 # Build buckx with the right flags
-sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
+sed -i "s|-O3 -Wall|%{build_cflags} -fPIC|" Makefile
 
 # Do not use env
 for fil in share/analysis-scripts/{build_callgraph,detect_recursion,estimate_difficulty,find_fun,function_finder,heuristic_list_functions,list_files,make_template,make_wrapper,normalize_jcdb,print_callgraph,summary}.py; do
@@ -166,9 +165,6 @@ sed -i 's/toplevel\.byte/toplevel.opt/g' \
   tests/journal/control2.c \
   tests/pdg/dyn_dpds.c
 %endif
-
-# Allow use of coq 8.13
-sed -i 's/8\.12\.\*/&|8.13.*/' src/plugins/wp/configure configure
 
 # Do not apply DESTDIR twice
 sed -i 's/\$(DESTDIR)//' share/Makefile.dynamic
@@ -189,6 +185,11 @@ mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
 mv -f %{buildroot}%{_bindir}/ptests.byte %{buildroot}%{_bindir}/ptests
 %endif
+
+# Two of the man pages are duplicates, so make one a link to the other.
+cat > %{buildroot}%{_mandir}/man1/frama-c-gui.1 << EOF
+.so man1/frama-c.1
+EOF
 
 # Install the opam file
 cp -p opam/opam %{buildroot}%{_libdir}/frama-c
@@ -211,14 +212,6 @@ mkdir -p %{buildroot}%{_datadir}/bash-completion/completions
 cp -p share/autocomplete_frama-c \
    %{buildroot}%{_datadir}/bash-completion/completions/frama-c
 
-# Install and bytecompile the XEmacs file
-mkdir -p %{buildroot}%{_xemacs_sitelispdir}
-cp -p share/emacs/*.el %{buildroot}%{_xemacs_sitelispdir}
-pushd %{buildroot}%{_xemacs_sitelispdir}
-%{_xemacs_bytecompile} *.el
-mkdir -p %{buildroot}%{_xemacs_sitestartdir}
-cp -p %{SOURCE5} %{buildroot}%{_xemacs_sitestartdir}
-
 # Install and bytecompile the Emacs file
 mkdir -p %{buildroot}%{_emacs_sitelispdir}
 mv %{buildroot}%{_datadir}/frama-c/emacs/*.el %{buildroot}%{_emacs_sitelispdir}
@@ -228,7 +221,7 @@ cd %{buildroot}%{_emacs_sitelispdir}
 %{_emacs_bytecompile} *.el
 mkdir -p %{buildroot}%{_emacs_sitestartdir}
 cp -p %{SOURCE5} %{buildroot}%{_emacs_sitestartdir}
-popd
+cd -
 
 # Remove files we don't actually want
 rm -f %{buildroot}%{_datadir}/frama-c/{autocomplete_frama-c,configure.ac}
@@ -278,7 +271,6 @@ make PTESTS_OPTS=-error-code tests
 %{_mandir}/man1/*
 
 %files doc
-%doc doc/code/*.{css,htm,txt}
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
 %doc doc/manuals/e-acsl-implementation-%{pkgversion}.pdf
@@ -295,11 +287,12 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitelispdir}/*.el*
 %{_emacs_sitestartdir}/acsl.el
 
-%files xemacs
-%{_xemacs_sitelispdir}/*.el*
-%{_xemacs_sitestartdir}/acsl.el
-
 %changelog
+* Thu Oct 21 2021 Jerry James <loganjerry@gmail.com> - 23.1-4
+- Rebuild for coq 8.14.0 and ocaml-zmq 5.1.4
+- Add -coq8.14 patch
+- Drop XEmacs support
+
 * Tue Oct 05 2021 Richard W.M. Jones <rjones@redhat.com> - 23.1-3
 - OCaml 4.13.1 build
 
