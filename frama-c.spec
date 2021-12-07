@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        23.1
-Release:        5%{?dist}
+Version:        24.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Vanadium
+%global pkgversion %{version}-Chromium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
@@ -37,9 +37,6 @@ Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
 # Adapt to coq 8.14
 Patch0:         %{name}-coq8.14.patch
-
-# Small fix for OCaml 4.13
-Patch1:         frama-c-23.1-Vanadium-fix-ocaml-413.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  appstream
@@ -160,8 +157,6 @@ done
 # Some tests run the bytecode toplevel.  This fails because why3 is built with
 # native code, not bytecode, so %%{_libdir}/ocaml/why3/why3.cma does not exist.
 sed -i 's/toplevel\.byte/toplevel.opt/g' \
-  tests/dynamic/dynamic.i \
-  tests/journal/control.i \
   tests/journal/control2.c \
   tests/pdg/dyn_dpds.c
 %endif
@@ -288,6 +283,10 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Dec  7 2021 Jerry James <loganjerry@gmail.com> - 24.0-1
+- Version 24.0
+- Drop upstreamed fix for OCaml 4.13
+
 * Tue Nov 30 2021 Jerry James <loganjerry@gmail.com> - 23.1-5
 - Rebuild for coq 8.14.1 and ocaml-sexplib0 0.15.0
 

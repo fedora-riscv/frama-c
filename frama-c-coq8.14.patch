@@ -1,33 +1,33 @@
---- a/configure	2021-07-20 18:00:00.000000000 -0600
-+++ b/configure	2021-10-20 11:54:42.761649428 -0600
-@@ -11882,9 +11882,9 @@ fi
+--- a/configure	2021-12-07 08:29:43.768272605 -0700
++++ b/configure	2021-12-07 08:30:41.829292069 -0700
+@@ -12137,9 +12137,9 @@ fi
  
  
      if test "$COQC" = "yes" ; then
 -      COQVERSION=`coqc -v | sed -n -e 's|.*version* *\([^ ]*\) .*$|\1|p' `
 +      COQVERSION=`coqc -v | sed -n -e 's|.*version* *\([^ ]*\).*|\1|p' `
        case $COQVERSION in
--        8.12.*|trunk)
-+        8.12.*|8.14.*|trunk)
-           { $as_echo "$as_me:${as_lineno-$LINENO}: result: coqc version $COQVERSION found" >&5
- $as_echo "coqc version $COQVERSION found" >&6; }
+-        8.13.*|trunk)
++        8.13.*|8.14.*|trunk)
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: coqc version $COQVERSION found" >&5
+ printf "%s\n" "coqc version $COQVERSION found" >&6; }
            ;;
---- a/src/plugins/wp/configure	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/configure	2021-10-20 11:54:52.348664907 -0600
-@@ -2340,9 +2340,9 @@ fi
+--- a/src/plugins/wp/configure	2021-12-07 08:29:43.770272606 -0700
++++ b/src/plugins/wp/configure	2021-12-07 08:31:09.509301340 -0700
+@@ -2396,9 +2396,9 @@ fi
  
  
      if test "$COQC" = "yes" ; then
 -      COQVERSION=`coqc -v | sed -n -e 's|.*version* *\([^ ]*\) .*$|\1|p' `
 +      COQVERSION=`coqc -v | sed -n -e 's|.*version* *\([^ ]*\).*|\1|p' `
        case $COQVERSION in
--        8.12.*|trunk)
-+        8.12.*|8.14.*|trunk)
-           { $as_echo "$as_me:${as_lineno-$LINENO}: result: coqc version $COQVERSION found" >&5
- $as_echo "coqc version $COQVERSION found" >&6; }
+-        8.13.*|trunk)
++        8.13.*|8.14.*|trunk)
+           { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: coqc version $COQVERSION found" >&5
+ printf "%s\n" "coqc version $COQVERSION found" >&6; }
            ;;
---- a/src/plugins/wp/share/coqwp/Bits.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Bits.v	2021-10-20 11:57:10.949888757 -0600
+--- a/src/plugins/wp/share/coqwp/Bits.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Bits.v	2021-12-07 08:29:43.770272606 -0700
 @@ -57,6 +57,7 @@ Definition Zfc := nat -> bool.
  Require Import ZArith.
  Require Import FunctionalExtensionality.
@@ -467,8 +467,8 @@
  Qed.
  
  (** ** Main tactics.*)
---- a/src/plugins/wp/share/coqwp/Cbits.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Cbits.v	2021-10-20 11:58:10.710985320 -0600
+--- a/src/plugins/wp/share/coqwp/Cbits.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Cbits.v	2021-12-07 08:29:43.771272606 -0700
 @@ -35,6 +35,7 @@ Require real.Real.
  Require real.RealInfix.
  Require real.FromInt.
@@ -969,8 +969,8 @@
    rewrite Zbits.lsl_arithmetic_shift; unfold Zbits.lsl_arithmetic_def.
    auto with zarith.
  Qed.
---- a/src/plugins/wp/share/coqwp/Cint.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Cint.v	2021-10-20 11:59:15.982090772 -0600
+--- a/src/plugins/wp/share/coqwp/Cint.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Cint.v	2021-12-07 08:29:43.771272606 -0700
 @@ -31,6 +31,7 @@ Require int.Int.
  Definition is_bool (x:Z): Prop := (x = 0%Z) \/ (x = 1%Z).
  
@@ -1217,8 +1217,8 @@
  Qed.
  
  Require Import Zbits.
---- a/src/plugins/wp/share/coqwp/int/Abs.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/Abs.v	2021-10-20 12:01:18.447288621 -0600
+--- a/src/plugins/wp/share/coqwp/int/Abs.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/Abs.v	2021-12-07 08:29:43.772272606 -0700
 @@ -14,6 +14,7 @@
  Require Import BuiltIn.
  Require BuiltIn.
@@ -1236,8 +1236,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/int/ComputerDivision.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/ComputerDivision.v	2021-10-20 12:01:54.070346170 -0600
+--- a/src/plugins/wp/share/coqwp/int/ComputerDivision.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/ComputerDivision.v	2021-12-07 08:29:43.772272606 -0700
 @@ -17,6 +17,7 @@ Require int.Int.
  Require int.Abs.
  
@@ -1286,8 +1286,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/int/ComputerOfEuclideanDivision.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/ComputerOfEuclideanDivision.v	2021-10-20 12:02:27.399394872 -0600
+--- a/src/plugins/wp/share/coqwp/int/ComputerOfEuclideanDivision.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/ComputerOfEuclideanDivision.v	2021-12-07 08:29:43.772272606 -0700
 @@ -20,6 +20,7 @@ Require int.Int.
  Require int.Abs.
  Require int.EuclideanDivision.
@@ -1321,8 +1321,8 @@
 +    lia.
  Qed.
  
---- a/src/plugins/wp/share/coqwp/int/EuclideanDivision.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/EuclideanDivision.v	2021-10-20 12:02:47.671420168 -0600
+--- a/src/plugins/wp/share/coqwp/int/EuclideanDivision.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/EuclideanDivision.v	2021-12-07 08:29:43.772272606 -0700
 @@ -18,6 +18,7 @@ Require Import BuiltIn.
  Require BuiltIn.
  Require int.Int.
@@ -1389,8 +1389,8 @@
  destruct h.
  (* case 0 < x < y *)
  assert (h1: (x mod y = x)%Z).
---- a/src/plugins/wp/share/coqwp/int/Exponentiation.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/Exponentiation.v	2021-10-20 12:03:06.646443851 -0600
+--- a/src/plugins/wp/share/coqwp/int/Exponentiation.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/Exponentiation.v	2021-12-07 08:29:43.772272606 -0700
 @@ -14,6 +14,7 @@
  Require Import BuiltIn.
  Require BuiltIn.
@@ -1408,8 +1408,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/int/MinMax.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/MinMax.v	2021-10-20 12:03:24.592466251 -0600
+--- a/src/plugins/wp/share/coqwp/int/MinMax.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/MinMax.v	2021-12-07 08:29:43.772272606 -0700
 @@ -14,6 +14,7 @@
  Require Import BuiltIn.
  Require BuiltIn.
@@ -1436,8 +1436,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/int/Power.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/int/Power.v	2021-10-20 12:03:44.119490625 -0600
+--- a/src/plugins/wp/share/coqwp/int/Power.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/int/Power.v	2021-12-07 08:29:43.773272606 -0700
 @@ -16,6 +16,7 @@ Require BuiltIn.
  Require int.Int.
  
@@ -1455,8 +1455,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/Memory.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Memory.v	2021-10-20 11:59:41.806132494 -0600
+--- a/src/plugins/wp/share/coqwp/Memory.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Memory.v	2021-12-07 08:29:43.773272606 -0700
 @@ -31,6 +31,7 @@ Require map.Map.
  
  Require Import ZArith.
@@ -1474,8 +1474,8 @@
  Qed.
  
  (* Why3 goal *)
---- a/src/plugins/wp/share/coqwp/Qedlib.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Qedlib.v	2021-10-20 11:58:46.270042767 -0600
+--- a/src/plugins/wp/share/coqwp/Qedlib.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Qedlib.v	2021-12-07 08:29:43.773272606 -0700
 @@ -23,6 +23,7 @@
  Require Import Bool.
  Require Import ZArith.
@@ -1535,8 +1535,8 @@
 -  omega.
 +  lia.
  Qed.
---- a/src/plugins/wp/share/coqwp/Vlist.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Vlist.v	2021-10-20 12:00:27.767206753 -0600
+--- a/src/plugins/wp/share/coqwp/Vlist.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Vlist.v	2021-12-07 08:29:43.773272606 -0700
 @@ -129,12 +129,12 @@ Proof.
          by( (replace (a0 :: w) with ([a0] ++ w) by seq); rewrite List.app_length; by seq).
        assert (0 <= Z.of_nat (Datatypes.length w)) by apply Zle_0_nat.
@@ -1603,8 +1603,8 @@
         replace (i - (length u + length v)) with (i - length u - length v) by auto with zarith.
         auto.
  Qed.
---- a/src/plugins/wp/share/coqwp/Zbits.v	2021-07-20 18:00:00.000000000 -0600
-+++ b/src/plugins/wp/share/coqwp/Zbits.v	2021-10-20 12:00:52.830247243 -0600
+--- a/src/plugins/wp/share/coqwp/Zbits.v	2021-11-29 17:00:00.000000000 -0700
++++ b/src/plugins/wp/share/coqwp/Zbits.v	2021-12-07 08:29:43.774272607 -0700
 @@ -45,10 +45,11 @@ Require Import FunctionalExtensionality.
  Require Import Qedlib.
  Require Import Bits.
