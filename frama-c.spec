@@ -7,11 +7,11 @@
 %endif
 
 Name:           frama-c
-Version:        23.1
+Version:        24.0
 Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Vanadium
+%global pkgversion %{version}-Chromium
 
 # Licensing breakdown in source file frama-c-1.6-licensing
 License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
@@ -142,14 +142,18 @@ mkdir doc/manuals
 cp -p %{SOURCE7} %{SOURCE8} %{SOURCE9} %{SOURCE10} %{SOURCE11} %{SOURCE12} \
    %{SOURCE13} %{SOURCE14} %{SOURCE15} %{SOURCE16} doc/manuals
 
-# Link with the Fedora LDFLAGS
-sed -i "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '$RPM_LD_FLAGS'|" Makefile
+# Link with the Fedora LDFLAGS, generate debuginfo, and fix an underlinked
+# plugin
+sed -e "/OLINKFLAGS/s|-linkall|& -runtime-variant _pic -ccopt '%{build_ldflags}'|" \
+    -e '/OCAMLMKLIB/s/\$(OPT_LIBS).*/& -lm/' \
+    -e 's/\$(OCAMLMKLIB)/& -g/' \
+    -i Makefile
 
 # Preserve timestamps when installing
 sed -ri 's/^CP[[:blank:]]+=.*/& -p/' share/Makefile.common
 
 # Build buckx with the right flags
-sed -i "s|-O3 -Wall|%{optflags} -fPIC|" Makefile
+sed -i "s|-O3 -Wall|%{build_cflags} -fPIC|" Makefile
 
 # Do not use env
 for fil in share/analysis-scripts/{build_callgraph,detect_recursion,estimate_difficulty,find_fun,function_finder,heuristic_list_functions,list_files,make_template,make_wrapper,normalize_jcdb,print_callgraph,summary}.py; do
@@ -161,14 +165,9 @@ done
 # Some tests run the bytecode toplevel.  This fails because why3 is built with
 # native code, not bytecode, so %%{_libdir}/ocaml/why3/why3.cma does not exist.
 sed -i 's/toplevel\.byte/toplevel.opt/g' \
-  tests/dynamic/dynamic.i \
-  tests/journal/control.i \
   tests/journal/control2.c \
   tests/pdg/dyn_dpds.c
 %endif
-
-# Allow use of coq 8.13
-sed -i 's/8\.12\.\*/&|8.13.*/' src/plugins/wp/configure configure
 
 # Do not apply DESTDIR twice
 sed -i 's/\$(DESTDIR)//' share/Makefile.dynamic
@@ -189,6 +188,11 @@ mv -f %{buildroot}%{_bindir}/frama-c.byte %{buildroot}%{_bindir}/frama-c
 mv -f %{buildroot}%{_bindir}/frama-c-gui.byte %{buildroot}%{_bindir}/frama-c-gui
 mv -f %{buildroot}%{_bindir}/ptests.byte %{buildroot}%{_bindir}/ptests
 %endif
+
+# Two of the man pages are duplicates, so make one a link to the other.
+cat > %{buildroot}%{_mandir}/man1/frama-c-gui.1 << EOF
+.so man1/frama-c.1
+EOF
 
 # Install the opam file
 cp -p opam/opam %{buildroot}%{_libdir}/frama-c
@@ -278,7 +282,6 @@ make PTESTS_OPTS=-error-code tests
 %{_mandir}/man1/*
 
 %files doc
-%doc doc/code/*.{css,htm,txt}
 %doc doc/manuals/acsl-implementation-%{pkgversion}.pdf
 %doc doc/manuals/aorai-manual-%{pkgversion}.pdf
 %doc doc/manuals/e-acsl-implementation-%{pkgversion}.pdf
@@ -300,6 +303,9 @@ make PTESTS_OPTS=-error-code tests
 %{_xemacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Dec  7 2021 Jerry James <loganjerry@gmail.com> - 24.0-1
+- Version 24.0
+
 * Wed Aug 11 2021 Jerry James <loganjerry@gmail.com> - 23.1-1
 - Version 23.1
 
