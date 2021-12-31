@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        24.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Chromium
@@ -51,20 +51,19 @@ BuildRequires:  libgnomecanvas-devel
 BuildRequires:  libtool
 BuildRequires:  ltl2ba
 BuildRequires:  make
-BuildRequires:  ocaml
+BuildRequires:  ocaml >= 4.08.1
 BuildRequires:  ocaml-apron-devel
-BuildRequires:  ocaml-biniou-devel
-BuildRequires:  ocaml-easy-format-devel
 BuildRequires:  ocaml-findlib-devel
-BuildRequires:  ocaml-lablgtk3-devel
+BuildRequires:  ocaml-lablgtk3-devel >= 3.1.0
 BuildRequires:  ocaml-lablgtk3-sourceview3-devel
+BuildRequires:  ocaml-mlgmpidl-devel
 BuildRequires:  ocaml-ocamldoc
-BuildRequires:  ocaml-ocamlgraph-devel
+BuildRequires:  ocaml-ocamlgraph-devel >= 1.8.8
 BuildRequires:  ocaml-ocp-indent-devel
 BuildRequires:  ocaml-ppx-deriving-yojson-devel
-BuildRequires:  ocaml-why3-devel
-BuildRequires:  ocaml-yojson-devel
-BuildRequires:  ocaml-zarith-devel
+BuildRequires:  ocaml-why3-devel >= 1.4.0
+BuildRequires:  ocaml-yojson-devel >= 1.6.0
+BuildRequires:  ocaml-zarith-devel >= 1.5
 BuildRequires:  ocaml-zmq-devel
 BuildRequires:  python3-devel
 BuildRequires:  time
@@ -283,6 +282,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Dec 27 2021 Jerry James <loganjerry@gmail.com> - 24.0-2
+- Rebuild for ocaml-ppxlib 0.24.0
+
 * Tue Dec  7 2021 Jerry James <loganjerry@gmail.com> - 24.0-1
 - Version 24.0
 - Drop upstreamed fix for OCaml 4.13
