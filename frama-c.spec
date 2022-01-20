@@ -8,7 +8,7 @@
 
 Name:           frama-c
 Version:        24.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Chromium
@@ -282,6 +282,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 24.0-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
+
 * Mon Dec 27 2021 Jerry James <loganjerry@gmail.com> - 24.0-2
 - Rebuild for ocaml-ppxlib 0.24.0
 
