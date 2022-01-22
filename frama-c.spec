@@ -6,6 +6,9 @@
 %global debug_package %{nil}
 %endif
 
+# Without this, gcc flags are passed to frama-c in the test suite
+%undefine _auto_set_build_flags
+
 Name:           frama-c
 Version:        24.0
 Release:        3%{?dist}
