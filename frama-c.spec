@@ -121,6 +121,9 @@ BuildArch:      noarch
 This package contains an Emacs support file for working with C source
 files marked up with ACSL.
 
+# buildsubdir is not defined here, but only later, so fix _package_note_file not to use it.
+%global _package_note_file %{_builddir}/%{name}-%{pkgversion}/.package_note-%{name}-%{version}-%{release}.%{_arch}.ld
+
 %prep
 %autosetup -n %{name}-%{pkgversion} -p1
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
