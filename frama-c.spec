@@ -1,3 +1,4 @@
+%undefine _package_note_flags
 # Frama-C contains a forked version of ocaml-cil.  We cannot use the Fedora
 # ocaml-cil package as a replacement, because Frama-C upstream has modified
 # their version in incompatible ways.
@@ -11,7 +12,7 @@
 
 Name:           frama-c
 Version:        24.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Chromium
@@ -288,6 +289,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Feb 04 2022 Richard W.M. Jones <rjones@redhat.com> - 24.0-4
+- OCaml 4.13.1 rebuild to remove package notes
+
 * Thu Jan 20 2022 Fedora Release Engineering <releng@fedoraproject.org> - 24.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_36_Mass_Rebuild
 
