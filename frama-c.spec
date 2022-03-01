@@ -1,7 +1,8 @@
-%undefine _package_note_flags
 # Frama-C contains a forked version of ocaml-cil.  We cannot use the Fedora
 # ocaml-cil package as a replacement, because Frama-C upstream has modified
 # their version in incompatible ways.
+
+%undefine _package_note_flags
 
 %ifnarch %{ocaml_native_compiler}
 %global debug_package %{nil}
@@ -12,7 +13,7 @@
 
 Name:           frama-c
 Version:        24.0
-Release:        4%{?dist}
+Release:        5%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Chromium
@@ -121,9 +122,6 @@ BuildArch:      noarch
 %description emacs
 This package contains an Emacs support file for working with C source
 files marked up with ACSL.
-
-# buildsubdir is not defined here, but only later, so fix _package_note_file not to use it.
-%global _package_note_file %{_builddir}/%{name}-%{pkgversion}/.package_note-%{name}-%{version}-%{release}.%{_arch}.ld
 
 %prep
 %autosetup -n %{name}-%{pkgversion} -p1
@@ -289,6 +287,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Mon Feb 28 2022 Jerry James <loganjerry@gmail.com> - 24.0-5
+- Rebuild for coq 8.15.0 and why3 1.4.1
+
 * Fri Feb 04 2022 Richard W.M. Jones <rjones@redhat.com> - 24.0-4
 - OCaml 4.13.1 rebuild to remove package notes
 
