@@ -13,7 +13,7 @@
 
 Name:           frama-c
 Version:        24.0
-Release:        6%{?dist}
+Release:        7%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Chromium
@@ -287,6 +287,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jun 22 2022 Jerry James <loganjerry@gmail.com> - 24.0-7
+- Rebuild for coq 8.15.2
+
 * Fri Mar 25 2022 Jerry James <loganjerry@gmail.com> - 24.0-6
 - Rebuild for coq 8.15.1 and ocaml-zmq 5.1.5
 
