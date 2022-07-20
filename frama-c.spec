@@ -40,6 +40,11 @@ Source14:       https://frama-c.com/download/metrics-manual-%{pkgversion}.pdf
 Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
+# why3 is unavailable on i686.  We could build without why3 support, but
+# choose to forgo i686 support entirely.
+# See https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
+ExclusiveArch:  %{java_arches}
+
 BuildRequires:  alt-ergo
 BuildRequires:  appstream
 BuildRequires:  desktop-file-utils
@@ -276,6 +281,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Jul 20 2022 Jerry James <loganjerry@gmail.com> - 25.0-1
+- Remove i686 support
+
 * Thu Jul  7 2022 Jerry James <loganjerry@gmail.com> - 25.0-1
 - Version 25.0
 - Drop coq 8.14 compatibility patch
