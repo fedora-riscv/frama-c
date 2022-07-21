@@ -13,7 +13,7 @@
 
 Name:           frama-c
 Version:        25.0
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Manganese
@@ -281,6 +281,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 25.0-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
+
 * Wed Jul 20 2022 Jerry James <loganjerry@gmail.com> - 25.0-1
 - Remove i686 support
 
