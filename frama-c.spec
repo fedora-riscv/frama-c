@@ -13,13 +13,13 @@
 
 Name:           frama-c
 Version:        25.0
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Manganese
 
-# Licensing breakdown in source file frama-c-1.6-licensing
-License:        LGPLv2 and GPLv2 and GPLv2+ and BSD and QPL
+# Licensing breakdown in source file frama-c-1.6.licensing
+License:        LGPL-2.1-only AND LGPL-2.1-or-later AND LGPL-2.0-only WITH OCaml-LGPL-linking-exception AND CC0-1.0 AND CC-BY-SA-4.0 AND BSD-3-Clause AND QPL-1.0
 URL:            https://frama-c.com/
 Source0:        https://frama-c.com/download/%{name}-%{pkgversion}.tar.gz
 Source1:        https://frama-c.com/download/%{name}-%{pkgversion}-api.tar.gz
@@ -41,7 +41,7 @@ Source15:       https://frama-c.com/download/rte-manual-%{pkgversion}.pdf
 Source16:       https://frama-c.com/download/wp-manual-%{pkgversion}.pdf
 
 # why3 is unavailable on i686.  We could build without why3 support, but
-# choose to forgo i686 support entirely.
+# choose to forego i686 support entirely.
 # See https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
 ExclusiveArch:  %{java_arches}
 
@@ -281,6 +281,10 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Aug 17 2022 Jerry James <loganjerry@gmail.com> - 25.0-3
+- Rebuild for ocaml-ppx-deriving-yojson 3.7.0
+- Convert License tag to SPDX
+
 * Thu Jul 21 2022 Fedora Release Engineering <releng@fedoraproject.org> - 25.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_37_Mass_Rebuild
 

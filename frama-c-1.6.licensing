@@ -1,27 +1,43 @@
 Breakdown of files by license:
 
-Most files are LGPL v2.1, so only the non LGPL v2.1 files will be listed:
+Most files are LGPL-2.1-only.  We do not build or distribute anything in the
+ivette directory.  The remaining non LGPL-2.1-only files are as follows:
 
-BSD:
-cil/* except cil/src/logic/* which is LGPL v2.1
-tests/minix/*
-external/unmarshal*
+BSD-3-Clause:
+src/kernel_internals/parsing/cparser.mly
+src/plugins/e-acsl/share/e-acsl/internals/e_acsl_rtl_io.c
+src/plugins/e-acsl/share/e-acsl/internals/e_acsl_rtl_io.h
 
-GPL v2:
-tests/spec/purse.c
+CC-BY-SA-4.0:
+man/frama-c.1
 
-GPL v2+:
-tests/idtc/*
+CC0-1.0:
+src/plugins/e-acsl/contrib/libdlmalloc/dlmalloc.c
 
-GPL (no version):
-tests/bugs/evoting.c
+CDDL-1.0:
+share/analysis-scripts/flamegraph.pl: not included in the binary RPM
 
-QPL with modifications (see licenses/Q_MODIFIED_LICENSE):
-external/hptmap.ml*
-external/ptmap.ml*
--------------------------------------------------------------------------
-Determination made as follows:
-grep -L -r -i LGPLv2.1 * | grep -E -v '^tests|^cil'
+GPL-2.0-only:
+tests/spec/purse.c: not included in the binary RPM
 
-will find the non LGPLv2.1 items that are not in tests/ or cil/. These
-directories were examined more carefully separately.
+GPL-2.0-or-later:
+tests/idct/idct.c: not included in the binary RPM
+tests/idct/ieee_1180_1990.c: not included in the binary RPM
+
+LGPL-2.0-only WITH OCaml-LGPL-linking-exception:
+src/libraries/utils/rangemap.ml: GNU Lesser General Public License
+src/libraries/utils/rangemap.mli: GNU Lesser General Public License
+
+LGPL-2.1-or-later:
+share/libc/byteswap.h
+share/libc/endian.h
+
+MIT:
+tests/libc/string_c_generic.c: not included in the binary RPM
+tests/libc/string_c_strchr.c: not included in the binary RPM
+tests/libc/string_c_strstr.c: not included in the binary RPM
+
+QPL-1.0 (modified):
+src/libraries/utils/hptmap.ml
+src/libraries/utils/hptmap.mli
+src/libraries/utils/hptmap_sig.mli
