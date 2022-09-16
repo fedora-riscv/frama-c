@@ -13,7 +13,7 @@
 
 Name:           frama-c
 Version:        25.0
-Release:        3%{?dist}
+Release:        4%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Manganese
@@ -281,6 +281,9 @@ make PTESTS_OPTS=-error-code tests
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Fri Sep 16 2022 Jerry James <loganjerry@gmail.com> - 25.0-4
+- Rebuild for why3 1.5.1
+
 * Wed Aug 17 2022 Jerry James <loganjerry@gmail.com> - 25.0-3
 - Rebuild for ocaml-ppx-deriving-yojson 3.7.0
 - Convert License tag to SPDX
