@@ -21,6 +21,8 @@ GPL-2.0-only:
 tests/spec/purse.c: not included in the binary RPM
 
 GPL-2.0-or-later:
+src/plugins/wp/doc/coqdoc/coq2tex/coq2html.mll
+src/plugins/wp/doc/coqdoc/coq2tex/coq2latex.mll
 tests/idct/idct.c: not included in the binary RPM
 tests/idct/ieee_1180_1990.c: not included in the binary RPM
 
