@@ -39,7 +39,7 @@ tests/libc/string_c_generic.c: not included in the binary RPM
 tests/libc/string_c_strchr.c: not included in the binary RPM
 tests/libc/string_c_strstr.c: not included in the binary RPM
 
-QPL-1.0 (modified):
+QPL-1.0-INRIA-2004 WITH QPL-1.0-INRIA-2004-exception:
 src/libraries/utils/hptmap.ml
 src/libraries/utils/hptmap.mli
 src/libraries/utils/hptmap_sig.mli
