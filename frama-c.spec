@@ -1,6 +1,11 @@
 # Coq's plugin architecture requires cmxs files, so:
 ExclusiveArch: %{ocaml_native_compiler}
 
+# why3 is unavailable on i686.  We could build without why3 support, but
+# choose to forego i686 support entirely.
+# See https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
+#ExclusiveArch:  %%{java_arches}
+
 # Frama-C contains a forked version of ocaml-cil.  We cannot use the Fedora
 # ocaml-cil package as a replacement, because Frama-C upstream has modified
 # their version in incompatible ways.
@@ -41,11 +46,6 @@ Source14:       com.%{name}.%{name}-gui.desktop
 Source15:       com.%{name}.%{name}-gui.metainfo.xml
 Source16:       acsl.el
 Source17:       frama-c.licensing
-
-# why3 is unavailable on i686.  We could build without why3 support, but
-# choose to forego i686 support entirely.
-# See https://fedoraproject.org/wiki/Changes/EncourageI686LeafRemoval
-ExclusiveArch:  %{java_arches}
 
 BuildRequires:  alt-ergo
 BuildRequires:  appstream
