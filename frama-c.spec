@@ -56,6 +56,7 @@ BuildRequires:  emacs-nox
 BuildRequires:  flamegraph
 BuildRequires:  graphviz
 BuildRequires:  libgnomecanvas-devel
+BuildRequires:  libyaml-devel
 BuildRequires:  make
 BuildRequires:  ocaml >= 4.11.1
 BuildRequires:  ocaml-apron-devel
