@@ -1,0 +1,153 @@
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/assigned_param.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/assigned_param.dot	2023-09-01 13:54:29.280214011 -0600
+@@ -20,4 +20,4 @@ digraph G {
+   cp7 -> cp3;
+   cp9 -> cp5;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/callstack_global.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/callstack_global.dot	2023-09-01 13:54:39.561046218 -0600
+@@ -46,4 +46,4 @@ digraph G {
+   cp23 -> cp19;
+   cp25 -> cp21;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/callstack_strategy.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/callstack_strategy.dot	2023-09-01 13:54:49.472884454 -0600
+@@ -42,4 +42,4 @@ digraph G {
+   cp15 -> cp18;
+   cp18 -> cp13;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/const.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/const.dot	2023-09-01 13:55:00.104710939 -0600
+@@ -27,4 +27,4 @@ digraph G {
+   cp13 -> cp9;
+   cp13 -> cp11;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/exceptional.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/exceptional.dot	2023-09-01 13:55:10.096547868 -0600
+@@ -24,4 +24,4 @@ digraph G {
+   cp11 -> cp5;
+   cp13 -> cp7;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/global.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/global.dot	2023-09-01 13:55:20.032385690 -0600
+@@ -20,4 +20,4 @@ digraph G {
+   cp7 -> cp3;
+   cp9 -> cp3;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/manydeps.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/manydeps.dot	2023-09-01 13:55:46.303956900 -0600
+@@ -41,4 +41,4 @@ digraph G {
+   cp25 -> cp24 [style="bold", ];
+   cp27 -> cp24;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/per_callstack.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/per_callstack.dot	2023-09-01 13:55:37.200105483 -0600
+@@ -48,4 +48,4 @@ digraph G {
+   cp23 -> cp17;
+   cp25 -> cp19;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/pointed_param.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/pointed_param.dot	2023-09-01 13:55:28.568246370 -0600
+@@ -30,4 +30,4 @@ digraph G {
+   cp11 -> cp9;
+   cp13 -> cp11;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/pointers_to_local.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/pointers_to_local.dot	2023-09-01 13:55:55.895800352 -0600
+@@ -19,4 +19,4 @@ digraph G {
+   cp5 -> cp2;
+   cp8 -> cp2;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/ranges.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/ranges.dot	2023-09-01 13:56:03.614674382 -0600
+@@ -120,4 +120,4 @@ digraph G {
+   cp95 -> cp37;
+   cp97 -> cp37;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/unfocused_callers.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/unfocused_callers.dot	2023-09-01 13:56:10.527561568 -0600
+@@ -28,4 +28,4 @@ digraph G {
+   cp9 -> cp5;
+   cp9 -> cp7;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/various.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/dive/tests/dive/oracle/various.dot	2023-09-01 13:56:18.631429285 -0600
+@@ -68,4 +68,4 @@ digraph G {
+   cp30 -> cp25;
+   cp32 -> cp27;
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/tests/misc/oracle/interpreted_automata_dataflow_backward.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/tests/misc/oracle/interpreted_automata_dataflow_backward.dot	2023-09-01 13:54:15.682435949 -0600
+@@ -73,4 +73,4 @@ digraph G {
+   cp32 -> cp31 [label=<int a = 1;>, ];
+   cp33 -> cp23 [label=<i ++;>, ];
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/tests/misc/oracle/interpreted_automata_dataflow_forward.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/tests/misc/oracle/interpreted_automata_dataflow_forward.dot	2023-09-01 13:54:02.080657968 -0600
+@@ -73,4 +73,4 @@ digraph G {
+   cp32 -> cp31 [label=<int a = 1;>, ];
+   cp33 -> cp23 [label=<i ++;>, ];
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/tests/pdg/oracle/call.f.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/tests/pdg/oracle/call.f.dot	2023-09-01 13:56:26.975293090 -0600
+@@ -28,4 +28,4 @@ digraph G {
+   8 -> 9 [color="#0000FF", ];
+   9 -> 10 [color="#0000FF", ];
+   
+-  }
+\ No newline at end of file
++  }
+--- frama-c-27.1-Cobalt/tests/pdg/oracle/call.g.dot.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/tests/pdg/oracle/call.g.dot	2023-09-01 13:56:36.158143213 -0600
+@@ -45,4 +45,4 @@ digraph G {
+   24 -> 27 [color="#0000FF", ];
+   27 -> 28 [color="#0000FF", ];
+   
+-  }
+\ No newline at end of file
++  }
