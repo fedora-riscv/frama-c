@@ -38,8 +38,11 @@ Source15:       com.%{name}.%{name}-gui.metainfo.xml
 Source16:       acsl.el
 Source17:       frama-c.licensing
 
+# Recent versions of glibc have changed the fread prototype
+Patch0:         %{name}-glibc.patch
+
 # ocamlgraph 2.1.0 adds newlines at the ends of dot files, breaking tests
-Patch0:         %{name}-ocamlgraph-2.1.0.patch
+Patch1:         %{name}-ocamlgraph-2.1.0.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  clang
@@ -132,10 +135,14 @@ This package contains an Emacs support file for working with C source
 files marked up with ACSL.
 
 %prep
-%autosetup -n %{name}-%{pkgversion} -p1
+%autosetup -N -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 2 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 13 -n %{name}-%{pkgversion}
+%ifarch x86_64
+%autopatch -M 0 -p1
+%endif
+%autopatch -m 1 -p1
 
 # Copy in the manuals
 mkdir doc/manuals
@@ -280,6 +287,9 @@ make default-tests PTESTS_OPTS=-error-code
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Oct  4 2023 Jerry James <loganjerry@gmail.com> - 27.1-4
+- Add patch for recent glibc versions
+
 * Sat Sep  9 2023 Jerry James <loganjerry@gmail.com> - 27.1-4
 - Rebuild for ocaml-ocamlgraph 2.1.0
 

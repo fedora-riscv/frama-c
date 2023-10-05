@@ -1,0 +1,11 @@
+--- frama-c-27.1-Cobalt/src/plugins/e-acsl/tests/bts/oracle/issue-eacsl-40.out.frama.c.orig	2023-07-17 18:00:00.000000000 -0600
++++ frama-c-27.1-Cobalt/src/plugins/e-acsl/tests/bts/oracle/issue-eacsl-40.out.frama.c	2023-10-03 19:56:04.833301130 -0600
+@@ -362,7 +362,7 @@ extern FILE *fopen(char const * restrict
+                    char const * restrict __modes);
+ 
+ extern size_t fread(void * restrict __ptr, size_t __size, size_t __n,
+-                    FILE * restrict __stream);
++                    FILE * restrict __stream) __attribute__((__nonnull__(4)));
+ 
+ void __e_acsl_globals_init(void)
+ {
