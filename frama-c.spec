@@ -13,7 +13,7 @@
 
 Name:           frama-c
 Version:        26.1
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Iron
@@ -282,6 +282,9 @@ make default-tests PTESTS_OPTS=-error-code
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Wed Oct 18 2023 Jerry James <loganjerry@gmail.com> - 26.1-2
+- Rebuild for coq 8.17.1
+
 * Wed Feb 15 2023 Jerry James <loganjerry@gmail.com> - 26.1-1
 - Version 26.1
 
