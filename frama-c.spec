@@ -1,19 +1,15 @@
 # Coq's plugin architecture requires cmxs files, so:
 ExclusiveArch: %{ocaml_native_compiler}
 
-%ifnarch %{ocaml_native_compiler}
-%global debug_package %{nil}
-%endif
-
 # Without this, gcc flags are passed to frama-c in the test suite
 %undefine _auto_set_build_flags
 
 Name:           frama-c
-Version:        27.1
-Release:        5%{?dist}
+Version:        28.0
+Release:        1%{?dist}
 Summary:        Framework for source code analysis of C software
 
-%global pkgversion %{version}-Cobalt
+%global pkgversion %{version}-Nickel
 
 # Licensing breakdown in source file frama-c.licensing
 License:        LGPL-2.1-only AND LGPL-2.1-or-later AND LGPL-2.0-only WITH OCaml-LGPL-linking-exception AND GPL-2.0-or-later AND CC0-1.0 AND CC-BY-SA-4.0 AND BSD-3-Clause AND QPL-1.0-INRIA-2004 WITH QPL-1.0-INRIA-2004-exception
@@ -38,8 +34,8 @@ Source15:       com.%{name}.%{name}-gui.metainfo.xml
 Source16:       acsl.el
 Source17:       frama-c.licensing
 
-# ocamlgraph 2.1.0 adds newlines at the ends of dot files, breaking tests
-Patch0:         %{name}-ocamlgraph-2.1.0.patch
+# Ignore whitespace differences in the tests
+Patch0:         %{name}-test.patch
 
 BuildRequires:  alt-ergo
 BuildRequires:  clang
@@ -66,6 +62,7 @@ BuildRequires:  ocaml-ppx-deriving-devel
 BuildRequires:  ocaml-ppx-deriving-yaml-devel >= 0.2.0
 BuildRequires:  ocaml-ppx-deriving-yojson-devel
 BuildRequires:  ocaml-ppx-import-devel
+BuildRequires:  ocaml-unionfind-devel
 BuildRequires:  ocaml-why3-devel >= 1.6.0
 BuildRequires:  ocaml-yaml-devel >= 3.0.0
 BuildRequires:  ocaml-yojson-devel >= 2.0.1
@@ -132,7 +129,7 @@ This package contains an Emacs support file for working with C source
 files marked up with ACSL.
 
 %prep
-%autosetup -n %{name}-%{pkgversion} -p1
+%autosetup -p1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 1 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 2 -n %{name}-%{pkgversion}
 %setup -q -T -D -a 13 -n %{name}-%{pkgversion}
@@ -269,6 +266,11 @@ make default-tests PTESTS_OPTS=-error-code
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Tue Jan  2 2024 Jerry James <loganjerry@gmail.com> - 28.0-1
+- Version 28.0
+- Drop upstreamed patches
+- Add patch for whitespace differences in the tests
+
 * Tue Nov 14 2023 Jerry James <loganjerry@gmail.com> - 27.1-5
 - Fix failure to find plugins (bz 2249607)
 - Install the zsh completion file

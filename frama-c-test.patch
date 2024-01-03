@@ -1,0 +1,1130 @@
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/chunk_typing_usable.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/chunk_typing_usable.res.oracle	2023-12-22 17:11:41.764182403 -0700
+@@ -12,6 +12,7 @@
+ --- Context 'typed_usable_lemma' Cluster 'Chunk' 
+ ---------------------------------------------
+ theory Chunk
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -32,11 +33,13 @@ theory Chunk
+   
+   predicate is_sint32_chunk (m:addr -> int) =
+     forall a:addr. is_sint32 (get m a)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_lemma' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -54,11 +57,13 @@ theory Compound
+   (* use frama_c_wp.memory.Memory *)
+   
+   function shift_sint32 (p:addr) (k:int) : addr = shift p k
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_lemma' Cluster 'A_Occ' 
+ ---------------------------------------------
+ theory A_Occ
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -103,11 +108,13 @@ theory A_Occ
+      f < t ->
+      is_sint32_chunk mint ->
+      is_sint32 v -> is_sint32 x1 -> L_occ mint v p f x = L_occ mint v p f t
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_lemma' Cluster 'Axiomatic1' 
+ ---------------------------------------------
+ theory Axiomatic1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -135,9 +142,11 @@ theory Axiomatic1
+      is_sint32_chunk mint ->
+      is_sint32 v ->
+      (L_occ mint v p f s + L_occ mint v p s t) = L_occ mint v p f t
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -165,11 +174,13 @@ end
+        is_uint32 i ->
+        is_sint32 i2 ->
+        (L_occ t i2 a i i3 + L_occ t i2 a i3 i1) = L_occ t i2 a i i1
++    
+   end
+ ---------------------------------------------
+ --- Context 'typed_usable_axiom' Cluster 'Chunk' 
+ ---------------------------------------------
+ theory Chunk1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -190,11 +201,13 @@ theory Chunk1
+   
+   predicate is_sint32_chunk1 (m:addr1 -> int) =
+     forall a:addr1. is_sint321 (get1 m a)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_axiom' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -212,11 +225,13 @@ theory Compound1
+   (* use frama_c_wp.memory.Memory1 *)
+   
+   function shift_sint321 (p:addr1) (k:int) : addr1 = shift1 p k
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_axiom' Cluster 'A_Occ' 
+ ---------------------------------------------
+ theory A_Occ1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -263,11 +278,13 @@ theory A_Occ1
+      is_sint32_chunk1 mint ->
+      is_sint321 v ->
+      is_sint321 x1 -> L_occ1 mint v p f x = L_occ1 mint v p f t
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_usable_axiom' Cluster 'Axiomatic1' 
+ ---------------------------------------------
+ theory Axiomatic11
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -295,9 +312,11 @@ theory Axiomatic11
+      is_sint32_chunk1 mint ->
+      is_sint321 v ->
+      (L_occ1 mint v p f s +' L_occ1 mint v p s t) = L_occ1 mint v p f t
++  
+ end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -324,11 +343,13 @@ end
+        is_sint32_chunk1 t ->
+        is_uint321 i1 ->
+        is_uint321 i -> is_sint321 i2 -> L_occ1 t i2 a i x = L_occ1 t i2 a i i1
++    
+   end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'Chunk' 
+ ---------------------------------------------
+ theory Chunk2
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool2 *)
+@@ -349,11 +370,13 @@ theory Chunk2
+   
+   predicate is_sint32_chunk2 (m:addr2 -> int) =
+     forall a:addr2. is_sint322 (get2 m a)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound2
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool2 *)
+@@ -371,11 +394,13 @@ theory Compound2
+   (* use frama_c_wp.memory.Memory2 *)
+   
+   function shift_sint322 (p:addr2) (k:int) : addr2 = shift2 p k
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'A_Occ' 
+ ---------------------------------------------
+ theory A_Occ2
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool2 *)
+@@ -422,9 +447,11 @@ theory A_Occ2
+      is_sint32_chunk2 mint ->
+      is_sint322 v ->
+      is_sint322 x1 -> L_occ2 mint v p f x = L_occ2 mint v p f t
++  
+ end
+ [wp:print-generated] 
+   theory WP2
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool2 *)
+@@ -452,6 +479,7 @@ end
+        is_sint32_chunk2 t ->
+        is_sint322 i3 ->
+        (L_occ2 t i3 a i i1 +'' L_occ2 t i3 a i1 i2) = L_occ2 t i3 a i i2
++    
+   end
+ [wp] 3 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/float_const.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/float_const.res.oracle	2023-12-22 17:12:15.458748469 -0700
+@@ -13,6 +13,7 @@
+ [wp] 8 goals scheduled
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -41,9 +42,11 @@
+       forall f:t.
+        let r = of_f32 f in
+        eq_f32 f (0x1.99999Ap-4:t) -> of_f32 (to_f32 (of_f64 (to_f64 r))) = r
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -72,9 +75,11 @@
+       forall f:t.
+        eq_f32 f (0x1.99999Ap-4:t) ->
+        not of_f32 f = (3602879701896397.0 / 36028797018963968.0)
++    
+   end
+ [wp:print-generated] 
+   theory WP2
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -102,9 +107,11 @@
+     goal wp_goal :
+       forall f:t.
+        eq_f32 f (0x1.99999Ap-4:t) -> of_f32 f = (13421773.0 / 134217728.0)
++    
+   end
+ [wp:print-generated] 
+   theory WP3
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -131,9 +138,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f32 f (0x1.99999Ap-4:t) -> not of_f32 f = (1.0 / 10.0)
++    
+   end
+ [wp:print-generated] 
+   theory WP4
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -162,9 +171,11 @@
+       forall f:t1.
+        let r = of_f321 (to_f321 (of_f641 f)) in
+        eq_f64 f (0x1.999999999999Ap-4:t1) -> of_f641 (to_f641 r) = r
++    
+   end
+ [wp:print-generated] 
+   theory WP5
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -193,9 +204,11 @@
+       forall f:t1.
+        eq_f64 f (0x1.999999999999Ap-4:t1) ->
+        not of_f641 f = (13421773.0 /' 134217728.0)
++    
+   end
+ [wp:print-generated] 
+   theory WP6
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -224,9 +237,11 @@
+       forall f:t1.
+        eq_f64 f (0x1.999999999999Ap-4:t1) ->
+        of_f641 f = (3602879701896397.0 /' 36028797018963968.0)
++    
+   end
+ [wp:print-generated] 
+   theory WP7
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -254,6 +269,7 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f64 f (0x1.999999999999Ap-4:t1) -> not of_f641 f = (1.0 /' 10.0)
++    
+   end
+ [wp] 8 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/inductive.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/inductive.res.oracle	2023-12-22 17:12:01.210931957 -0700
+@@ -6,6 +6,7 @@
+ --- Context 'typed' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -25,9 +26,11 @@ theory Compound
+   function shift_sint32 (p:addr) (k:int) : addr = shift p k
+   
+   function shiftfield_F1__list_next (p:addr) : addr = shift p 1
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -67,9 +70,11 @@ end
+     goal wp_goal :
+       forall t:int -> int, t1:int -> int, t2:addr -> addr, t3:addr -> addr, a:
+        addr, a1:addr. P_reachable t1 t3 a a1 -> not P_reachable t t2 a a1
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -92,9 +97,11 @@ end
+     
+     goal wp_goal :
+       forall i:int, i1:int, i2:int. P_is_gcd1 i i1 i2 -> not P_is_gcd1 i1 i2 i
++    
+   end
+ [wp:print-generated] 
+   theory WP2
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -179,6 +186,7 @@ end
+       forall t:addr -> int, t1:addr -> int, t2:addr -> int, a:addr, a1:addr, i:
+        int, i1:int, i2:int, i3:int.
+        P_same_elements t1 t2 a a1 i i2 -> not P_same_elements t t1 a1 a i1 i3
++    
+   end
+ [wp] 3 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/predicates_functions.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/predicates_functions.res.oracle	2023-12-22 17:12:36.818473934 -0700
+@@ -4,6 +4,7 @@
+ [wp] 1 goal scheduled
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -33,6 +34,7 @@
+       forall i:int. L_RF i = (if i <= 0 then 0 else L_F i + L_RF ((- 1) + i))
+     
+     goal wp_goal : forall i:int. 0 < i -> P_RP (L_RF i)
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/struct_fields.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/struct_fields.res.oracle	2023-12-22 17:13:02.355146116 -0700
+@@ -9,6 +9,7 @@
+ --- Context 'typed_foo' Cluster 'Chunk' 
+ ---------------------------------------------
+ theory Chunk
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -35,11 +36,13 @@ theory Chunk
+   
+   predicate is_sint32_chunk (m:addr -> int) =
+     forall a:addr. is_sint32 (get m a)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_foo' Cluster 'S1_X' 
+ ---------------------------------------------
+ theory S1_X
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -61,11 +64,13 @@ theory S1_X
+   
+   predicate IsS1_X (s:S1_X) =
+     (is_sint8 (F1_X_a s) /\ is_sint16 (F1_X_b s)) /\ is_sint32 (F1_X_c s)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_foo' Cluster 'Init_S1_X' 
+ ---------------------------------------------
+ theory Init_S1_X
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -82,11 +87,13 @@ theory Init_S1_X
+   
+   type Init_S1_X =
+     | Init_S1_X1 (Init_F1_X_a:bool) (Init_F1_X_b:bool) (Init_F1_X_c:bool)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_foo' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -209,9 +216,11 @@ theory Compound
+      [Load_Init_S1_X p (havoc init1 init q n)].
+      separated p 3 q n ->
+      Load_Init_S1_X p (havoc init1 init q n) = Load_Init_S1_X p init
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -245,9 +254,11 @@ end
+        sconst t2 ->
+        cinits t ->
+        valid_rd t1 a 3 -> IsS1_X (Load_S1_X a t2 t3 t4) -> valid_rw t1 a 3
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -281,6 +292,7 @@ end
+        linked t1 ->
+        sconst t2 ->
+        cinits t -> IsS1_X (Load_S1_X a t2 t3 t4) -> valid_rd t1 a 3
++    
+   end
+ [wp] 2 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/sum_types.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_acsl/oracle/sum_types.res.oracle	2023-12-22 17:13:18.426939801 -0700
+@@ -6,6 +6,7 @@
+ --- Context 'typed' Cluster 'A_A' 
+ ---------------------------------------------
+ theory A_A
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -33,11 +34,13 @@ theory A_A
+     | Q_IAi : forall p:int. is_InAxiomatic (C_IAi p)
+   
+   predicate P_P A_InAxiomatic
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'Axiomatic1' 
+ ---------------------------------------------
+ theory Axiomatic1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -67,11 +70,13 @@ theory Axiomatic1
+   (* use A_A *)
+   
+   lemma Q_LA : forall a:A_InAxiomatic. is_InAxiomatic a -> P_P a
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'A_X' 
+ ---------------------------------------------
+ theory A_X
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -89,11 +94,13 @@ theory A_X
+   (* use Axiomatic1 *)
+   
+   predicate P_Q A_AtTopLevel
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'Axiomatic2' 
+ ---------------------------------------------
+ theory Axiomatic2
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -124,11 +131,13 @@ theory Axiomatic2
+   (* use A_X *)
+   
+   lemma Q_LB : forall a:A_AtTopLevel. is_AtTopLevel a -> P_Q a
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed' Cluster 'A_Y' 
+ ---------------------------------------------
+ theory A_Y
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -146,9 +155,11 @@ theory A_Y
+   (* use Axiomatic2 *)
+   
+   predicate P_R A_Rec
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -168,9 +179,11 @@ end
+     (* use A_Y *)
+     
+     goal wp_goal : forall r:A_Rec. is_Rec r -> P_R r
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -190,9 +203,11 @@ end
+     (* use A_X *)
+     
+     goal wp_goal : forall a:A_AtTopLevel. is_AtTopLevel a -> P_Q a
++    
+   end
+ [wp:print-generated] 
+   theory WP2
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -210,6 +225,7 @@ end
+     (* use A_A *)
+     
+     goal wp_goal : forall i:A_InAxiomatic. is_InAxiomatic i -> P_P i
++    
+   end
+ [wp] 3 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_bts/oracle/bts_2110.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_bts/oracle/bts_2110.res.oracle	2023-12-22 17:10:21.197219990 -0700
+@@ -11,6 +11,7 @@
+ --- Context 'typed_myMain' Cluster 'S2_A' 
+ ---------------------------------------------
+ theory S2_A
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -33,11 +34,13 @@ theory S2_A
+   predicate IsS2_A (s:S2_A) = is_sint32 (F2_A_dummy s)
+   
+   predicate EqS2_A (s:S2_A) (s1:S2_A) = F2_A_dummy s1 = F2_A_dummy s
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_myMain' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -80,9 +83,11 @@ theory Compound
+      [Load_S2_A p (havoc mint1 mint q n)].
+      separated p 1 q n ->
+      Load_S2_A p (havoc mint1 mint q n) = Load_S2_A p mint
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -111,6 +116,7 @@ end
+        region (a1.base) <= 0 ->
+        region (a.base) <= 0 ->
+        is_sint32 i -> IsS2_A a3 -> is_sint32 x -> IsS2_A a4 -> EqS2_A a4 a3
++    
+   end
+ [wp] [Generated] Goal typed_myMain_terminates (Qed)
+ [wp] 3 goals generated
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp/oracle/sharing.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp/oracle/sharing.res.oracle	2023-12-22 17:09:06.494182057 -0700
+@@ -9,6 +9,7 @@
+ --- Context 'typed_f' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -26,9 +27,11 @@ theory Compound
+   (* use frama_c_wp.memory.Memory *)
+   
+   function shift_sint32 (p:addr) (k:int) : addr = shift p k
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -67,6 +70,7 @@ end
+        valid_rw t a1 10 ->
+        (forall i2:int. 0 <= i2 -> i2 <= 9 -> 0 <= get t1 (shift_sint32 a i2)) ->
+        0 <= get (set m3 (shift_sint32 a 4) (get m3 a2)) (shift_sint32 a i)
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp/oracle/wp_eqb.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp/oracle/wp_eqb.res.oracle	2023-12-22 17:09:29.349887717 -0700
+@@ -7,6 +7,7 @@
+ [wp] 1 goal scheduled
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -28,6 +29,7 @@
+        (if i3 = i2 then 1 else 0) = (if i1 = i then 1 else 0) ->
+        is_sint32 i3 ->
+        is_sint32 i2 -> is_sint32 i1 -> is_sint32 i -> i3 = i2 <-> i1 = i
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/float_driver.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/float_driver.res.oracle	2023-12-22 17:14:01.970380828 -0700
+@@ -9,6 +9,7 @@
+ [wp] 20 goals scheduled
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -35,9 +36,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f64 (add_f64 f (0x1.0p0:t)) (round_double RTP (of_f64 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -64,9 +67,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f64 (add_f64 f (0x1.0p0:t)) (round_double RTZ (of_f64 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP2
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -93,9 +98,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f64 (add_f64 f (0x1.0p0:t)) (round_double RNA (of_f64 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP3
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -122,9 +129,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f64 (add_f64 f (0x1.0p0:t)) (round_double RNE (of_f64 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP4
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -150,9 +159,11 @@
+     (* use frama_c_wp.cfloat.Cfloat *)
+     
+     goal wp_goal : forall f:t. is_NaN_f64 (add_f64 f (0x1.0p0:t))
++    
+   end
+ [wp:print-generated] 
+   theory WP5
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -178,9 +189,11 @@
+     (* use frama_c_wp.cfloat.Cfloat *)
+     
+     goal wp_goal : forall f:t. is_infinite_f64 (add_f64 f (0x1.0p0:t))
++    
+   end
+ [wp:print-generated] 
+   theory WP6
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -206,9 +219,11 @@
+     (* use frama_c_wp.cfloat.Cfloat *)
+     
+     goal wp_goal : forall f:t. is_finite_f64 (add_f64 f (0x1.0p0:t))
++    
+   end
+ [wp:print-generated] 
+   theory WP7
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -235,9 +250,11 @@
+     
+     goal wp_goal :
+       forall f:t. eq_f64 (add_f64 f (0x1.0p0:t)) (round_double RTN (of_f64 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP8
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -265,9 +282,11 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f32 (add_f32 f (0x1.0p0:t1)) (round_float RNA1 (of_f32 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP9
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -295,9 +314,11 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f32 (add_f32 f (0x1.0p0:t1)) (round_float RNE1 (of_f32 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP10
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -323,9 +344,11 @@
+     (* use frama_c_wp.cfloat.Cfloat *)
+     
+     goal wp_goal : forall f:t. is_negative_infinite_f64 (add_f64 f (0x1.0p0:t))
++    
+   end
+ [wp:print-generated] 
+   theory WP11
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -351,9 +374,11 @@
+     (* use frama_c_wp.cfloat.Cfloat *)
+     
+     goal wp_goal : forall f:t. is_positive_infinite_f64 (add_f64 f (0x1.0p0:t))
++    
+   end
+ [wp:print-generated] 
+   theory WP12
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -379,9 +404,11 @@
+     (* use frama_c_wp.cfloat.Cfloat1 *)
+     
+     goal wp_goal : forall f:t1. is_finite_f32 (add_f32 f (0x1.0p0:t1))
++    
+   end
+ [wp:print-generated] 
+   theory WP13
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -409,9 +436,11 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f32 (add_f32 f (0x1.0p0:t1)) (round_float RTN1 (of_f32 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP14
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -439,9 +468,11 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f32 (add_f32 f (0x1.0p0:t1)) (round_float RTP1 (of_f32 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP15
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -469,9 +500,11 @@
+     goal wp_goal :
+       forall f:t1.
+        eq_f32 (add_f32 f (0x1.0p0:t1)) (round_float RTZ1 (of_f32 f))
++    
+   end
+ [wp:print-generated] 
+   theory WP16
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -498,9 +531,11 @@
+     
+     goal wp_goal :
+       forall f:t1. is_negative_infinite_f32 (add_f32 f (0x1.0p0:t1))
++    
+   end
+ [wp:print-generated] 
+   theory WP17
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -527,9 +562,11 @@
+     
+     goal wp_goal :
+       forall f:t1. is_positive_infinite_f32 (add_f32 f (0x1.0p0:t1))
++    
+   end
+ [wp:print-generated] 
+   theory WP18
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -555,9 +592,11 @@
+     (* use frama_c_wp.cfloat.Cfloat1 *)
+     
+     goal wp_goal : forall f:t1. is_NaN_f32 (add_f32 f (0x1.0p0:t1))
++    
+   end
+ [wp:print-generated] 
+   theory WP19
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -583,6 +622,7 @@
+     (* use frama_c_wp.cfloat.Cfloat1 *)
+     
+     goal wp_goal : forall f:t1. is_infinite_f32 (add_f32 f (0x1.0p0:t1))
++    
+   end
+ [wp] 20 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/inductive.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/inductive.res.oracle	2023-12-22 17:13:42.865626075 -0700
+@@ -6,6 +6,7 @@
+ --- Context 'typed' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -25,9 +26,11 @@ theory Compound
+   function shift_sint32 (p:addr) (k:int) : addr = shift p k
+   
+   function shiftfield_F1__list_next (p:addr) : addr = shift p 1
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -62,9 +65,11 @@ end
+        a1 = a \/
+        valid_rw t a1 2 /\
+        P_reachable t t1 (get t1 (shiftfield_F1__list_next a1)) a
++    
+   end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -143,6 +148,7 @@ end
+        int.
+        P_same_elements t t1 (shift_sint32 a i2) (shift_sint32 a1 i2) i i1 ->
+        P_same_elements t t1 a a1 (i + i2) (i1 + i2)
++    
+   end
+ [wp] 2 goals generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/model.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_plugin/oracle/model.res.oracle	2023-12-22 17:14:20.745139817 -0700
+@@ -11,6 +11,7 @@
+ --- Context 'typed_f' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -28,11 +29,13 @@ theory Compound
+   (* use frama_c_wp.memory.Memory *)
+   
+   function shift_sint32 (p:addr) (k:int) : addr = shift p k
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_f' Cluster 'Axiomatic' 
+ ---------------------------------------------
+ theory Axiomatic
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -48,9 +51,11 @@ theory Axiomatic
+   (* use map.Map *)
+   
+   predicate P_P int
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -77,6 +82,7 @@ end
+       forall t:addr -> int, i:int, a:addr.
+        let x = get t (shift_sint32 a i) in
+        region (a.base) <= 0 -> is_sint32 i -> is_sint32 x -> P_P x
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+@@ -100,6 +106,7 @@ Prove: P_P(x).
+ --- Context 'typed_ref_f' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -117,11 +124,13 @@ theory Compound1
+   (* use frama_c_wp.memory.Memory1 *)
+   
+   function shift_sint321 (p:addr1) (k:int) : addr1 = shift1 p k
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_ref_f' Cluster 'Axiomatic' 
+ ---------------------------------------------
+ theory Axiomatic1
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool1 *)
+@@ -137,9 +146,11 @@ theory Axiomatic1
+   (* use map.Map1 *)
+   
+   predicate P_P1 int
++  
+ end
+ [wp:print-generated] 
+   theory WP1
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool1 *)
+@@ -166,6 +177,7 @@ end
+       forall t:addr1 -> int, i:int, a:addr1.
+        let x = get1 t (shift_sint321 a i) in
+        region1 (a.base1) <=' 0 -> is_sint321 i -> is_sint321 x -> P_P1 x
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_typed/oracle/multi_matrix_types.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_typed/oracle/multi_matrix_types.res.oracle	2023-12-22 17:10:51.755826433 -0700
+@@ -9,6 +9,7 @@
+ --- Context 'typed_job' Cluster 'Matrix' 
+ ---------------------------------------------
+ theory Matrix
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -31,11 +32,13 @@ theory Matrix
+   
+   predicate EqArray_int (n:int) (t:int -> int) (t1:int -> int) =
+     forall i:int. 0 <= i -> i < n -> get t1 i = get t i
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_job' Cluster 'S1_S' 
+ ---------------------------------------------
+ theory S1_S
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -62,11 +65,13 @@ theory S1_S
+   predicate EqS1_S (s:S1_S) (s1:S1_S) =
+     (F1_S_f s1 = F1_S_f s /\ EqArray_int 5 (F1_S_a s) (F1_S_a s1)) /\
+     EqArray_int 5 (F1_S_b s) (F1_S_b s1)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_job' Cluster 'Compound' 
+ ---------------------------------------------
+ theory Compound
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -221,9 +226,11 @@ theory Compound
+      separated p 11 q n ->
+      Load_S1_S p mint1 mint (havoc mint3 mint2 q n) =
+      Load_S1_S p mint1 mint mint2
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -249,6 +256,7 @@ end
+        let a1 = Load_S1_S a t t2 t1 in
+        let a2 = Load_S1_S a t (set t2 (shiftfield_F1_S_f a) i) t1 in
+        region (a.base) <= 0 -> IsS1_S a1 -> IsS1_S a2 -> EqS1_S a2 a1
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
+--- frama-c-28.0-Nickel/src/plugins/wp/tests/wp_typed/oracle/struct_array_type.res.oracle.orig	2023-11-29 17:00:00.000000000 -0700
++++ frama-c-28.0-Nickel/src/plugins/wp/tests/wp_typed/oracle/struct_array_type.res.oracle	2023-12-22 17:11:10.715582269 -0700
+@@ -9,6 +9,7 @@
+ --- Context 'typed_f' Cluster 'Matrix' 
+ ---------------------------------------------
+ theory Matrix
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -26,11 +27,13 @@ theory Matrix
+   (* use frama_c_wp.cint.Cint *)
+   
+   predicate IsArray_sint32 (t:int -> int) = forall i:int. is_sint32 (get t i)
++  
+ end
+ ---------------------------------------------
+ --- Context 'typed_f' Cluster 'S1_s' 
+ ---------------------------------------------
+ theory S1_s
++  
+   (* use why3.BuiltIn.BuiltIn *)
+   
+   (* use bool.Bool *)
+@@ -54,9 +57,11 @@ theory S1_s
+     IsArray_sint32 (F1_s_a s) /\ IsArray_sint32 (F1_s_b s)
+   
+   predicate IsArray_S1_s (t:int -> S1_s) = forall i:int. IsS1_s (get t i)
++  
+ end
+ [wp:print-generated] 
+   theory WP
++    
+     (* use why3.BuiltIn.BuiltIn *)
+     
+     (* use bool.Bool *)
+@@ -86,6 +91,7 @@ end
+        is_uint32 i ->
+        is_sint32 a2 ->
+        is_sint32 a1 -> is_sint32 ((1 + ((- 1) * a1)) + a3) -> (2 * a1) <= a3
++    
+   end
+ [wp] 1 goal generated
+ ------------------------------------------------------------
