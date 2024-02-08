@@ -1,12 +1,12 @@
 # Coq's plugin architecture requires cmxs files, so:
-ExclusiveArch: %{ocaml_native_compiler}
+ExclusiveArch: %{ocaml_native_compiler} riscv64
 
 # Without this, gcc flags are passed to frama-c in the test suite
 %undefine _auto_set_build_flags
 
 Name:           frama-c
 Version:        28.0
-Release:        2%{?dist}
+Release:        2.rv64%{?dist}
 Summary:        Framework for source code analysis of C software
 
 %global pkgversion %{version}-Nickel
@@ -266,6 +266,9 @@ make default-tests PTESTS_OPTS=-error-code
 %{_emacs_sitestartdir}/acsl.el
 
 %changelog
+* Thu Feb 08 2024 Jiasheng Zhao <JasenChao@gmail.com> - 28.0-2.rv64
+- rebuilt for riscv64
+
 * Fri Feb  2 2024 Jerry James <loganjerry@gmail.com> - 28.0-2
 - Rebuild for why3 1.7.1
 
